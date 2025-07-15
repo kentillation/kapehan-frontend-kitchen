@@ -4,7 +4,7 @@
             <h1 class="text-center">Poofsa <span class="text-secondary">.kitch</span></h1>
             <v-form ref="form" @submit.prevent="handleLogin" v-model="isFormValid" class="pa-4">
                 <div class="text-subtitle-1 text-medium-emphasis">Email</div>
-                <v-text-field v-model="cashier_email" 
+                <v-text-field v-model="kitchen_email" 
                     :rules="[requiredRule, emailFormatRule]"
                     placeholder="Type here..."
                     prepend-inner-icon="mdi-email-outline"
@@ -13,7 +13,7 @@
                     autocomplete="username" />
 
                 <div class="text-subtitle-1 text-medium-emphasis mt-2">Password</div>
-                <v-text-field v-model="cashier_password" 
+                <v-text-field v-model="kitchen_password" 
                     :rules="[requiredRule]"
                     placeholder="Type here..."
                     prepend-inner-icon="mdi-lock-outline" 
@@ -52,8 +52,8 @@ export default {
     },
     data() {
         return {
-            cashier_email: '',
-            cashier_password: '',
+            kitchen_email: '',
+            kitchen_password: '',
             showPassword: false,
             isFormValid: false,
             loading: false,
@@ -80,7 +80,7 @@ export default {
             try {
                 this.loadingStore.show('Logging in...');
                 const authStore = useAuthStore();
-                await authStore.login({ cashier_email: this.cashier_email, cashier_password: this.cashier_password });
+                await authStore.login({ kitchen_email: this.kitchen_email, kitchen_password: this.kitchen_password });
                 window.location.href = '/barista';
             } catch (error) {
                 this.loadingStore.hide();

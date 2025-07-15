@@ -3,6 +3,7 @@
     <v-container>
         <h3 class="text-brown-lighten-1">Main</h3>
         <v-row class="mt-2">
+            
             <v-col v-for="order in currentOrders" :key="order.reference_number" cols="12" lg="4" md="6" sm="6">
                 <v-card :class="{'active-card': activeCards[order.reference_number]}" @click="handleCardClick(order.reference_number)">
                     <v-card-title>

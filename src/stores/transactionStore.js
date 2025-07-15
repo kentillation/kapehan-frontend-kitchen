@@ -16,34 +16,8 @@ export const useTransactStore = defineStore('transactionData', {
     }),
 
     actions: {
-        async submitTransactStore(transactionData, orderedProducts) {
-            this.loading = true;
-            this.error = null;
-            this.success = false;
-            try {
-                if (!transactionData?.[0] || !Array.isArray(orderedProducts)) {
-                    throw new Error('Invalid data');
-                }
-                const payload = {
-                    ...transactionData[0],  // Flatten transaction object
-                    products: orderedProducts
-                };
-                const response = await TRANSACTION_API.submitTransactionApi(payload);
-                if (!response || response.status !== true) {
-                    throw new Error(response?.message || 'Failed to submit transaction');
-                }
-                this.transactionData = response.data;
-                this.success = true;
-                return response;
-            } catch (error) {
-                console.error('Transaction submission failed:', error);
-                this.error = error.message || 'Failed to submit transaction';
-                throw error;
-            } finally {
-                this.loading = false;
-            }
-        },
 
+        // New
         async fetchAllCurrentOrdersStore() {
             this.loading = true;
             this.error = null;
@@ -60,28 +34,6 @@ export const useTransactStore = defineStore('transactionData', {
             } catch (error) {
                 console.error('Error in fetchAllCurrentOrdersApi:', error);
                 this.error = 'Failed to fetch currentOrders';
-                throw error;
-            } finally {
-                this.loading = false;
-            }
-        },
-
-        async fetchAllOrderStatusStore() {
-            this.loading = true;
-            this.error = null;
-            try {
-                if (!TRANSACTION_API || typeof TRANSACTION_API.fetchAllOrderStatusApi !== 'function') {
-                    throw new Error('TRANSACTION_API service is not properly initialized');
-                }
-                const response = await TRANSACTION_API.fetchAllOrderStatusApi();
-                if (response && response.status === true) {
-                    this.orderStatuses = response.data;
-                } else {
-                    throw new Error('Failed to fetch orderStatuses');
-                }
-            } catch (error) {
-                console.error('Error in fetchAllOrderStatusApi:', error);
-                this.error = 'Failed to fetch order status';
                 throw error;
             } finally {
                 this.loading = false;
@@ -111,32 +63,7 @@ export const useTransactStore = defineStore('transactionData', {
             }
         },
 
-        async fetchOrderDetailsStore(referenceNumber) {
-            this.loading = true;
-            this.error = null;
-            try {
-                if (!referenceNumber) {
-                    throw new Error('Invalid referenceNumber');
-                }
-                const response = await TRANSACTION_API.fetchOrderDetailsApi(referenceNumber);
-                if (response && response.status === true) {
-                    // Store both the full response and the data separately
-                    this.orderDtls = response;
-                    this.orderDtlsData = response.data;
-                    return response;
-                } else {
-                    throw new Error(response?.message || 'Failed to fetch order details');
-                }
-            } catch (error) {
-                console.error('Error fetching order details:', error);
-                this.error = error.message || 'Failed to fetch order details';
-                throw error;
-            }
-            finally {
-                this.loading = false;
-            }
-        },
-
+        // New
         async fetchKitchenProductDetailsStore(transactionId) {
             this.loading = true;
             this.error = null;
@@ -162,105 +89,7 @@ export const useTransactStore = defineStore('transactionData', {
             }
         },
 
-        async fetchOrderDetailsTempStore(referenceNumber) {
-            this.loading = true;
-            this.error = null;
-            try {
-                if (!referenceNumber) {
-                    throw new Error('Invalid referenceNumber');
-                }
-                const response = await TRANSACTION_API.fetchOrderDetailsTempApi(referenceNumber);
-                if (response && response.status === true) {
-                    this.orderDtls = response;
-                    this.orderDtlsData = response.data;
-                    return response;
-                } else {
-                    throw new Error(response?.message || 'Failed to fetch order details');
-                }
-            } catch (error) {
-                console.error('Error fetching order details:', error);
-                this.error = error.message || 'Failed to fetch order details';
-                throw error;
-            }
-            finally {
-                this.loading = false;
-            }
-        },
-
-        async fetchQRcodeTempStore(referenceNumber) {
-            this.loading = true;
-            this.error = null;
-            try {
-                if (!referenceNumber) {
-                    throw new Error('Invalid referenceNumber');
-                }
-                const qrCodeBlob = await TRANSACTION_API.fetchOrderQRcodeTempApi(referenceNumber);
-                if (qrCodeBlob) {
-                    this.orderQRCode = qrCodeBlob;  // Store the blob directly
-                    return qrCodeBlob;  // Return the blob directly
-                } else {
-                    throw new Error('Failed to fetch QR Code');
-                }
-            } catch (error) {
-                console.error('Error fetching QR Code:', error);
-                this.error = error.message || 'Failed to fetch QR Code';
-                throw error;
-            }
-            finally {
-                this.loading = false;
-            }
-        },
-
-        async fetchQRcodeStore(referenceNumber) {
-            this.loading = true;
-            this.error = null;
-            try {
-                if (!referenceNumber) {
-                    throw new Error('Invalid referenceNumber');
-                }
-                const qrCodeBlob = await TRANSACTION_API.fetchOrderQRcodeApi(referenceNumber);
-                if (qrCodeBlob) {
-                    this.orderQRCode = qrCodeBlob;  // Store the blob directly
-                    return qrCodeBlob;  // Return the blob directly
-                } else {
-                    throw new Error('Failed to fetch QR Code');
-                }
-            } catch (error) {
-                console.error('Error fetching QR Code:', error);
-                this.error = error.message || 'Failed to fetch QR Code';
-                throw error;
-            }
-            finally {
-                this.loading = false;
-            }
-        },
-
-        async updateOrderStatusStore(referenceNumber, orderStatus) {
-            this.loading = true;
-            this.error = null;
-            try {
-                if (!referenceNumber || !orderStatus) {
-                    throw new Error('Invalid referenceNumber or orderStatus');
-                }
-                const response = await TRANSACTION_API.updateOrderStatusApi(referenceNumber, orderStatus);
-                if (response && response.status === true) {
-                    this.currentOrders = this.currentOrders.map(order =>
-                        order.id === referenceNumber ? { ...order, orderStatus } : order
-                    );
-                    return response;
-                } else {
-                    throw new Error(response?.message || 'Failed to update order orderStatus');
-                }
-            } catch (error) {
-                console.error('Error updating order orderStatus:', error);
-                this.error = error.message || 'Failed to update order orderStatus';
-                throw error;
-            }
-            finally {
-                this.loading = false;
-            }
-        },
-
+        // New
         async updateKitchenProductStatusStore(transactionId, orderStatus) {
             this.loading = true;
             this.error = null;
