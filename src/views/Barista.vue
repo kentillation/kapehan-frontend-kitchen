@@ -2,6 +2,14 @@
 <template>
     <v-container>
         <h3 class="text-brown-lighten-1">Main</h3>
+        <v-sheet v-if="this.orders.length === 0" class="d-flex flex-column align-center text-center mx-auto mt-5" elevation="4" height="300" width="100%"
+            rounded>
+            <div class="w-50 mt-14">
+                <v-icon :size="iconSize" icon="mdi-food-off" class="text-red-darken-2 mb-3"></v-icon>
+                <h2 class="text-red-darken-2 mb-3">No order found!</h2>
+                <p class="text-grey mb-3">Looks like there is no currently order yet.</p>
+            </div>
+        </v-sheet>
         <v-row class="mt-2">
             
             <v-col v-for="order in currentOrders" :key="order.reference_number" cols="12" lg="4" md="6" sm="6">
@@ -55,6 +63,7 @@ export default {
     },
     data() {
         return {
+            iconSize: "70px",
             orders: [],
             loadingCurrentOrders: false,
             station_statuses: [],
