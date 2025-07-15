@@ -9,30 +9,32 @@
       </div>
     </div>
     <v-main>
-      <v-app-bar v-if="showMenu" prominent>
-        <v-btn @click.stop="drawer = !drawer" icon>
-          <v-icon>mdi-menu</v-icon>
-        </v-btn>
-        <h3>{{ authStore.shopName }}</h3>
-        <v-spacer></v-spacer>
-        <v-btn icon>
-          <v-icon>mdi-bell-outline</v-icon>
-        </v-btn>
-        <v-btn class="ms-0" icon>
-          <v-icon @click="toSettings">mdi-account-circle-outline</v-icon>
-        </v-btn>
-      </v-app-bar>
-      <v-navigation-drawer class="h-screen pa-3" v-model="drawer" v-if="showSidebar">
-        <v-list density="compact" nav>
-          <v-list-subheader size="30">Menu</v-list-subheader>
-          <v-list-item prepend-icon="mdi-faucet-variant" @click="toBarista" class="ps-5 bg-brown-darken-3"
-            style="border-radius: 30px;">Main</v-list-item>
-          <v-list-item prepend-icon="mdi-cog-outline" @click="toSettings" class="bg-brown-darken-3 ps-5"
-            style="border-radius: 30px;">Settings</v-list-item>
-          <v-list-item prepend-icon="mdi-door-open" @click="showLogout" class="ps-5 bg-brown-darken-3"
-            style="border-radius: 30px;">Sign Out</v-list-item>
-        </v-list>
-      </v-navigation-drawer>
+      <template v-if="!isNotFoundPage">
+        <v-app-bar v-if="showMenu" prominent>
+          <v-btn @click.stop="drawer = !drawer" icon>
+            <v-icon>mdi-menu</v-icon>
+          </v-btn>
+          <h3>{{ authStore.shopName }}</h3>
+          <v-spacer></v-spacer>
+          <v-btn icon>
+            <v-icon>mdi-bell-outline</v-icon>
+          </v-btn>
+          <v-btn class="ms-0" icon>
+            <v-icon @click="toSettings">mdi-account-circle-outline</v-icon>
+          </v-btn>
+        </v-app-bar>
+        <v-navigation-drawer class="h-screen pa-3" v-model="drawer" v-if="showSidebar">
+          <v-list density="compact" nav>
+            <v-list-subheader size="30">Menu</v-list-subheader>
+            <v-list-item prepend-icon="mdi-faucet-variant" @click="toBarista" class="ps-5 bg-brown-darken-3"
+              style="border-radius: 30px;">Main</v-list-item>
+            <v-list-item prepend-icon="mdi-cog-outline" @click="toSettings" class="bg-brown-darken-3 ps-5"
+              style="border-radius: 30px;">Settings</v-list-item>
+            <v-list-item prepend-icon="mdi-door-open" @click="showLogout" class="ps-5 bg-brown-darken-3"
+              style="border-radius: 30px;">Sign Out</v-list-item>
+          </v-list>
+        </v-navigation-drawer>
+      </template>
       <v-layout>
         <router-view />
         <GlobalLoader />
@@ -46,7 +48,7 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useLoadingStore } from '@/stores/loading';
 import GlobalLoader from '@/components/GlobalLoader.vue';
-
+import { useRoute } from 'vue-router';
 
 export default {
   name: 'App',
@@ -57,6 +59,8 @@ export default {
     const authStore = useAuthStore();
     const loadingStore = useLoadingStore();
     const connectionStatus = ref('online'); // 'online', 'offline', 'slow', 'waiting'
+    const route = useRoute();
+    const isNotFoundPage = computed(() => route.name === 'NotFound');
 
     // Simple network check
     const updateStatus = () => {
@@ -135,14 +139,15 @@ export default {
       connectionStatus,
       connectionStatusText,
       connectionStatusIcon,
+      isNotFoundPage,
     };
   },
   computed: {
     showSidebar() {
-      return this.$route.name !== 'LoginPage' && this.$route.name !== 'Reference';
+      return this.$route.name !== 'LoginPage' && !this.isNotFoundPage;
     },
     showMenu() {
-      return this.$route.name !== 'LoginPage' && this.$route.name !== 'Reference';
+      return this.$route.name !== 'LoginPage' && !this.isNotFoundPage;
     },
   },
   methods: {
