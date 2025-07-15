@@ -1,0 +1,94 @@
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.v-btn--size-default, .v-icon {
+    min-width: 0 !important;
+}
+
+.v-icon--size-default {
+    font-size: calc(var(--v-icon-size-multiplier) * 1.5em) !important;
+}
+
+.v-btn--size-default {
+  --v-btn-height: 25px !important;
+}
+
+.v-data-table {
+    max-width: 100%;
+}
+
+table th {
+    height: 0 !important;
+}
+
+thead .v-data-table__th .v-data-table-header__content {
+    color: #a2a0a0;
+}
+
+.to-show-head {
+    display: none;
+}
+
+.to-show {
+    display: none;
+}
+
+@media (max-width: 450px) {
+    .to-hide-head {
+        display: none;
+    }
+
+    .to-show-head {
+        display: flex;
+    }
+}
+
+@media (max-width: 530px) {
+    .to-hide {
+        display: none;
+    }
+
+    .to-show {
+        display: flex;
+    }
+}
+
+.skeleton-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.connection-container {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.connection-banner {
+  text-align: center;
+  padding: 6px 30px;
+  border-radius: 0 0 30px 30px;
+  font-size: 12px;
+  gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.connection-banner.offline {
+  background: #8a1515;
+  color: #fffafa;
+}
+.connection-banner.slow {
+  background: #b88d20;
+  color: #fffafa;
+}
+.connection-banner.waiting {
+  background: #118aa0;
+  color: #fffafa;
+}

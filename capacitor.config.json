@@ -1,0 +1,10 @@
+{
+  "appId": "com.example.poofsa_tend",
+  "appName": "Poofsa",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://poofsa-tend.vercel.app",
+    "cleartext": true
+  }
+}

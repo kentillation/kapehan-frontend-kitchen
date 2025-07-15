@@ -1,0 +1,13 @@
+import { CapacitorConfig } from '@capacitor/cli';
+
+const config: CapacitorConfig = {
+    appId: 'com.example.kapehan',
+    appName: 'kapehan',
+    webDir: 'dist',
+    server: {
+        allowNavigation: ['backend.centralcoffeeandtea.com'],
+        cleartext: true,
+    }
+};
+
+export default config;
