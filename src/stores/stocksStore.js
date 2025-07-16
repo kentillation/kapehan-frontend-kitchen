@@ -31,61 +31,26 @@ export const useStocksStore = defineStore('stocks', {
             }
         },
 
-        async saveStocksStore(stocks) {
+        async fetchLowStocksStore(branchId) {
             this.loading = true;
             this.error = null;
             try {
-                if (!STOCK_API || typeof STOCK_API.saveStocksApi !== 'function') {
+                if (!STOCK_API || typeof STOCK_API.fetchLowStocksApi !== 'function') {
                     throw new Error('STOCK_API service is not properly initialized');
                 }
-                const response = await STOCK_API.saveStocksApi(stocks);
-                if (response && (response.status === true)) {
-                    return response;
-                } else {
-                    throw new Error('Failed to save stocks');
-                }
-            } catch (error) {
-                console.error('Error in saveStocksApi:', error);
-                this.error = 'Failed to save stocks';
-                throw error;
-            } finally {
-                this.loading = false;
-            }
-        },
-
-        async updateStockStore(stocks) {
-            this.loading = true;
-            this.error = null;
-            try {
-                if (!STOCK_API || typeof STOCK_API.updateStockApi !== 'function') {
-                    throw new Error('STOCK_API service is not properly initialized');
-                }
-                const response = await STOCK_API.updateStockApi(stocks);
+                const response = await STOCK_API.fetchLowStocksApi(branchId);
                 if (response && response.status === true) {
-                    return response;
+                    this.stock_alert_qty = response.count;
                 } else {
-                    throw new Error('Failed to update stocks');
+                    throw new Error('Failed to fetch stocks');
                 }
             } catch (error) {
-                console.error('Error in updateStockApi:', error);
-                this.error = 'Failed to update stocks';
+                console.error('Error in fetchLowStocksApi:', error);
+                this.error = 'Failed to fetch stocks';
                 throw error;
             } finally {
                 this.loading = false;
             }
         },
     },
-
-    // getters: {
-    //     getBranchNames: (state) => {
-    //         return state.branches.map(branch => [
-    //             typeof branch === 'object' ? branch.branch_name : branch, 
-    //             'mdi-store-outline'
-    //         ]);
-    //     },
-
-    //     getBranchById: (state) => (id) => {
-    //         return state.branches.find(branch => branch.id === id);
-    //     }
-    // }
 });

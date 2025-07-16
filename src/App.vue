@@ -14,9 +14,15 @@
           <v-btn @click.stop="drawer = !drawer" icon>
             <v-icon>mdi-menu</v-icon>
           </v-btn>
-          <h3>{{ authStore.shopName }}</h3>
+          <h3 class="ms-1">{{ authStore.shopName }}</h3>
           <v-spacer></v-spacer>
           <v-btn icon>
+            <!-- added -->
+            <v-badge v-if="this.stockNotifQty >= 1" 
+              :content="this.stockNotifQty" 
+              class="position-absolute" 
+              style="top: 5px; right: 9px;" 
+              color="error"></v-badge>
             <v-icon>mdi-bell-outline</v-icon>
           </v-btn>
           <v-btn class="ms-0" icon>
@@ -47,16 +53,27 @@
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useLoadingStore } from '@/stores/loading';
+import { useStocksStore } from '@/stores/stocksStore'; // added
 import GlobalLoader from '@/components/GlobalLoader.vue';
 import { useRoute } from 'vue-router';
 
 export default {
   name: 'App',
+  data () {
+    return {
+      stocks: [],
+      stockNotifQty: null, // added
+    }
+  },
   components: {
     GlobalLoader,
   },
+  mounted() {
+    // this.fetchLowStocks(); // added
+  },
   setup() {
     const authStore = useAuthStore();
+    const stocksStore = useStocksStore(); //added
     const loadingStore = useLoadingStore();
     const connectionStatus = ref('online'); // 'online', 'offline', 'slow', 'waiting'
     const route = useRoute();
@@ -133,6 +150,7 @@ export default {
 
     return {
       authStore,
+      stocksStore, //added
       loadingStore,
       drawer: ref(true),
       open: ref(false),
@@ -159,6 +177,25 @@ export default {
     },
     toBarista() {
       this.$router.push('/barista');
+    },
+    // added
+    async fetchLowStocks() {
+      try {
+        if (!this.authStore.branchId) {
+          console.error('Error fetching stocks!');
+          this.stocks = [];
+          return;
+        }
+        await this.stocksStore.fetchLowStocksStore(this.authStore.branchId);
+        if (this.stocksStore.stock_alert_qty === 0) {
+          this.stockNotifQty = 0;
+        } else {
+          this.stockNotifQty = this.stocksStore.stock_alert_qty;
+          console.log("Low stock qty:", this.stockNotifQty);
+        }
+      } catch (error) {
+        console.error('Error fetching stocks:', error);
+      }
     },
     async showLogout() {
       this.drawer = false;

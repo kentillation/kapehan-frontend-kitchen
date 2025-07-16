@@ -3,7 +3,7 @@
     <v-container>
         <div class="d-flex align-center justify-space-between">
             <h3 class="text-brown-lighten-1">Main</h3>
-            <v-btn @click="fetchCurrentOrders && fetchLowStocks" icon>
+            <v-btn @click="fetchCurrentOrders" icon>
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>
         </div>
@@ -76,10 +76,6 @@ export default {
             station_statuses: [],
         }
     },
-    mounted() {
-        this.fetchCurrentOrders();
-        this.fetchLowStocks(); // added
-    },
     setup() {
         const authStore = useAuthStore();
         const branchStore = useBranchStore();
@@ -107,43 +103,28 @@ export default {
         async fetchCurrentOrders() {
             this.loadingCurrentOrders = true;
             try {
-                await this.transactStore.fetchAllStationStatusStore();
-                this.station_statuses = this.transactStore.stationStatuses;
-
-                await this.transactStore.fetchAllCurrentOrdersStore();
+                this.loadingStore.show("Loading orders...");
                 const orders = [];
-                await Promise.all(this.transactStore.currentOrders.map(async (order) => {
-                    try {
-                        const response = await this.transactStore.fetchKitchenProductDetailsStore(order.transaction_id);
-                        if (response?.data) {
-                            orders.push({
-                                transaction_id: response.data.transaction_id,
-                                table_number: response.data.table_number,
-                                reference_number: order.reference_number, // Only from initial response
-                                order_items: response.data.all_orders || [],
-                                customer_name: response.data.customer_name,
-                                total_amount: response.data.total_amount,
-                                order_status_id: response.data.order_status_id
-                            });
-                        }
-                    } catch (error) {
-                        console.error(`Error fetching details for order ${order.transaction_id}:`, error);
-                        orders.push({
-                            transaction_id: order.transaction_id,
-                            table_number: order.table_number,
-                            reference_number: order.reference_number,
-                            order_items: [],
-                            error: true
-                        });
-                    }
-                }));
+                const response = await this.transactStore.fetchAllCurrentOrdersStore();
+                if (response?.data) {
+                    orders.push({
+                        transaction_id: response.data.transaction_id,
+                        table_number: response.data.table_number,
+                        reference_number: response.data.reference_number,
+                        order_items: response.data.all_orders || [],
+                        customer_name: response.data.customer_name,
+                        total_amount: response.data.total_amount,
+                        order_status_id: response.data.order_status_id
+                    });
+                }
                 this.orders = orders;
             } catch (error) {
                 console.error('Error fetching current orders:', error);
                 this.showError("Error fetching current orders!");
-                this.orders = []; // Clear orders on major error
+                this.orders = [];
             } finally {
                 this.loadingCurrentOrders = false;
+                this.loadingStore.hide();
             }
         },
 
@@ -252,7 +233,6 @@ export default {
 .v-card.active-card {
     background-color: rgba(72, 169, 166) !important;
     transition: background-color 0.5s ease 3s;
-    color: #fff8f8;
 }
 
 .v-chip {
