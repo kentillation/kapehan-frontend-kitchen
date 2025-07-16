@@ -33,7 +33,7 @@
           <v-list density="compact" nav>
             <v-list-subheader size="30">Menu</v-list-subheader>
             <v-list-item prepend-icon="mdi-faucet-variant" @click="toBarista" class="ps-5 bg-brown-darken-3"
-              style="border-radius: 30px;">Main</v-list-item>
+              style="border-radius: 30px;">Kitchen</v-list-item>
             <v-list-item prepend-icon="mdi-cog-outline" @click="toSettings" class="bg-brown-darken-3 ps-5"
               style="border-radius: 30px;">Settings</v-list-item>
             <v-list-item prepend-icon="mdi-door-open" @click="showLogout" class="ps-5 bg-brown-darken-3"
@@ -69,17 +69,15 @@ export default {
     GlobalLoader,
   },
   mounted() {
-    // this.fetchLowStocks(); // added
+    this.fetchLowStocks(); // added
   },
   setup() {
     const authStore = useAuthStore();
     const stocksStore = useStocksStore(); //added
     const loadingStore = useLoadingStore();
-    const connectionStatus = ref('online'); // 'online', 'offline', 'slow', 'waiting'
+    const connectionStatus = ref('online');
     const route = useRoute();
     const isNotFoundPage = computed(() => route.name === 'NotFound');
-
-    // Simple network check
     const updateStatus = () => {
       if (!navigator.onLine) {
         connectionStatus.value = 'offline';
@@ -87,8 +85,6 @@ export default {
         connectionStatus.value = 'online';
       }
     };
-
-    // Optional: Simulate slow/waiting (replace with real logic as needed)
     let waitingTimeout;
     const simulateWaiting = () => {
       connectionStatus.value = 'waiting';
@@ -100,11 +96,7 @@ export default {
     onMounted(() => {
       window.addEventListener('online', updateStatus);
       window.addEventListener('offline', updateStatus);
-
-      // Example: simulate waiting for connection on mount
       simulateWaiting();
-
-      // Optional: Check for slow connection using Network Information API
       if ('connection' in navigator) {
         navigator.connection.addEventListener('change', () => {
           if (navigator.connection.downlink < 1) {

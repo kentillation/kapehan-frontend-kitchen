@@ -2,7 +2,7 @@
 <template>
     <v-container>
         <div class="d-flex align-center justify-space-between">
-            <h3 class="text-brown-lighten-1">Main</h3>
+            <h3 class="text-brown-lighten-1">Kitchen</h3>
             <v-btn @click="fetchCurrentOrders" icon>
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>

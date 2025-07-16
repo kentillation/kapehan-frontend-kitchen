@@ -2,8 +2,8 @@ import apiClient from '../axios';
 
 export const STOCK_API = {
     ENDPOINTS: {
-        FETCH: '/stocks',
-        FETCH_LOW_STOCKS: '/low-stocks',
+        FETCH: '/open/stocks',
+        FETCH_LOW_STOCKS: '/open/low-stocks',
     },
 
     /**

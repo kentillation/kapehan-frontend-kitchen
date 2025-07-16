@@ -2,9 +2,9 @@ import apiClient from '../axios';
 
 export const BRANCH_API = {
     ENDPOINTS: {
-        FETCH_ALL: '/shop-branches',
-        CREATE: '/save-branch',
-        DETAILS: '/branch-details'
+        FETCH_ALL: '/open/shop-branches',
+        CREATE: '/open/save-branch',
+        DETAILS: '/open/branch-details'
     },
 
     async fetchBranches() {
