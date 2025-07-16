@@ -3,7 +3,7 @@
     <v-container>
         <div class="d-flex align-center justify-space-between">
             <h3 class="text-brown-lighten-1">Main</h3>
-            <v-btn @click="fetchCurrentOrders && fetchLowStocks" icon>
+            <v-btn @click="fetchCurrentOrders" icon>
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>
         </div>
@@ -78,7 +78,6 @@ export default {
     },
     mounted() {
         this.fetchCurrentOrders();
-        this.fetchLowStocks(); // added
     },
     setup() {
         const authStore = useAuthStore();
@@ -107,9 +106,8 @@ export default {
         async fetchCurrentOrders() {
             this.loadingCurrentOrders = true;
             try {
-                await this.transactStore.fetchAllStationStatusStore();
-                this.station_statuses = this.transactStore.stationStatuses;
-
+                this.fetchLowStocks();
+                this.fetchStationStatus();
                 await this.transactStore.fetchAllCurrentOrdersStore();
                 const orders = [];
                 await Promise.all(this.transactStore.currentOrders.map(async (order) => {
