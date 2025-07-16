@@ -69,7 +69,7 @@ export default {
     GlobalLoader,
   },
   mounted() {
-    this.fetchLowStocks(); // added
+    // this.fetchLowStocks(); // added
   },
   setup() {
     const authStore = useAuthStore();
