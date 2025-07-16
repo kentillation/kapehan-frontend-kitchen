@@ -24,9 +24,9 @@
                         <v-spacer></v-spacer>
                     </v-card-title>
                     <v-card-text>
-                        <v-alert v-if="!order.order_items || order.order_items.length === 0" type="info"
+                        <v-alert v-if="!order.order_items || order.order_items.length === 0" type="warning"
                             variant="tonal">
-                            No items found for this order
+                            No order found for this table
                         </v-alert>
                         <div v-else v-for="(item, index) in order.order_items" :key="index"
                             class="d-flex align-center justify-space-between mt-1">
@@ -104,6 +104,7 @@ export default {
     },
     methods: {
         async fetchCurrentOrders() {
+            this.loadingStore.show("Loading orders...");
             this.loadingCurrentOrders = true;
             try {
                 this.fetchLowStocks();
@@ -133,6 +134,7 @@ export default {
                             order_items: [],
                             error: true
                         });
+                        this.loadingStore.hide();
                     }
                 }));
                 this.orders = orders;
@@ -142,6 +144,7 @@ export default {
                 this.orders = []; // Clear orders on major error
             } finally {
                 this.loadingCurrentOrders = false;
+                this.loadingStore.hide();
             }
         },
 
