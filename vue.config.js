@@ -11,7 +11,7 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       '/api': {
-        target: 'https://poofsa.centralcoffeeandtea.com',
+        target: 'https://poofsa.kentillation.com',
         changeOrigin: true,
         pathRewrite: { '^/api': '' },
       },
@@ -20,10 +20,13 @@ module.exports = defineConfig({
   configureWebpack: {
     plugins: [
       new webpack.DefinePlugin({
+        // Define the feature flag to eliminate the warning
+        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
         'process.env': {
-          // Don't redefine variables here unless absolutely necessary
+          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+          ...require('dotenv').config().parsed
         }
       })
     ]
-  }
+  },
 });

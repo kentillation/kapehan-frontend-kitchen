@@ -6,12 +6,12 @@ Pusher.logToConsole = process.env.NODE_ENV === 'development'
 
 const echo = new Echo({
     broadcaster: 'pusher',
-    key: process.env.VUE_APP_PUSHER_KEY || 'f2ff9925065555c61de5',
-    cluster: process.env.VUE_APP_PUSHER_CLUSTER || 'ap1',
-    wsHost: process.env.VUE_APP_PUSHER_HOST || 'ws.pusher.com', // remove in Production
-    wsPort: process.env.VUE_APP_PUSHER_PORT || 80, // remove in Production
-    wssPort: process.env.VUE_APP_PUSHER_PORT || 443, // remove in Production
-    forceTLS: (process.env.VUE_APP_PUSHER_FORCE_TLS || 'true') === 'true',
+    key: process.env.VUE_APP_PUSHER_KEY,
+    cluster: process.env.VUE_APP_PUSHER_CLUSTER,
+    wsHost: process.env.VUE_APP_PUSHER_HOST, // remove in Production
+    wsPort: process.env.VUE_APP_PUSHER_PORT, // remove in Production
+    wssPort: process.env.VUE_APP_PUSHER_PORT, // remove in Production
+    forceTLS: process.env.VUE_APP_PUSHER_FORCE_TLS,
     encrypted: process.env.VUE_APP_PUSHER_ENCRYPTED,
     enabledTransports: ['ws', 'wss'],
     enableStats: true,
