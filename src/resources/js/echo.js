@@ -1,7 +1,6 @@
 import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
 
-// Enable Pusher logging (optional)
 Pusher.logToConsole = process.env.NODE_ENV === 'development'
 
 const echo = new Echo({
@@ -24,7 +23,6 @@ const echo = new Echo({
     }
 })
 
-// Add connection monitoring
 echo.connector.pusher.connection.bind('state_change', (states) => {
     console.log('Pusher state changed:', states)
     if (states.current === 'unavailable') {

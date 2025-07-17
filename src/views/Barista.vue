@@ -78,8 +78,8 @@ export default {
         }
     },
     mounted() {
-        console.log("Pusher key: ", process.env.VUE_APP_PUSHER_KEY);
-        console.log("Pusher cluster: ", process.env.VUE_APP_PUSHER_CLUSTER);
+        console.log("Pusher Key: ", process.env.VUE_APP_PUSHER_KEY);
+        console.log("Pusher Cluster: ", process.env.VUE_APP_PUSHER_CLUSTER);
         console.log("Pusher WebSocket host: ", process.env.VUE_APP_PUSHER_HOST);
         console.log("Pusher WebSocket port: ", process.env.VUE_APP_PUSHER_PORT);
         console.log("Pusher Force TLS: ", process.env.VUE_APP_PUSHER_FORCE_TLS);
@@ -88,7 +88,6 @@ export default {
             order.order_items.forEach(item => {
                 TRANSACTION_API.subscribeToStatusUpdates(item.station_status_id, (data) => {
                     console.log('Real-time update:', data);
-                    // Update your local data here
                     const orderItem = this.orders
                         .flatMap(o => o.order_items)
                         .find(i => i.station_status_id === data.new_status);
