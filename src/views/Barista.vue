@@ -60,7 +60,7 @@ import { useStocksStore } from '@/stores/stocksStore';
 import { useLoadingStore } from '@/stores/loading';
 import { reactive } from 'vue';
 import Snackbar from '@/components/Snackbar.vue';
-import { TRANSACTION_API } from '@/api/transactionApi';
+import echo from '../resources/js/echo' ;
 
 export default {
     // eslint-disable-next-line vue/multi-word-component-names
@@ -78,19 +78,20 @@ export default {
         }
     },
     mounted() {
-        this.orders.forEach(order => {
-            order.order_items.forEach(item => {
-                TRANSACTION_API.subscribeToStatusUpdates(item.station_status_id, (data) => {
-                    console.log('Real-time update:', data);
-                    const orderItem = this.orders
-                        .flatMap(o => o.order_items)
-                        .find(i => i.station_status_id === data.new_status);
-                    if (orderItem) {
-                        orderItem.station_status_id = data.new_status;
-                    }
-                });
-            });
-        });
+        // this.orders.forEach(order => {
+        //     order.order_items.forEach(item => {
+        //         TRANSACTION_API.subscribeToStatusUpdates(item.station_status_id, (data) => {
+        //             console.log('Real-time update:', data);
+        //             this.changeStatus(order);
+        //             const orderItem = this.orders
+        //                 .flatMap(o => o.order_items)
+        //                 .find(i => i.station_status_id === data.new_status);
+        //             if (orderItem) {
+        //                 orderItem.station_status_id = data.new_status;
+        //             }
+        //         });
+        //     });
+        // });
         this.fetchCurrentOrders();
     },
     setup() {
@@ -117,6 +118,25 @@ export default {
         },
     },
     methods: {
+        subscribeToStatusUpdates() {
+            this.orders.forEach(order => {
+            order.order_items.forEach(item => {
+                const channelName = `update-station-status.${item.station_status_id}`;
+                echo.channel(channelName)
+                .listen('StationStatusUpdated', (data) => {
+                    console.log(`📡 Real-time update on ${channelName}:`, data);
+                    const orderItem = this.orders
+                    .flatMap(o => o.order_items)
+                    .find(i => i.station_status_id === data.station_status_id);
+                    if (orderItem) {
+                    orderItem.station_status_id = data.new_status;
+                    const statusName = this.getStatusName(data.new_status);
+                    this.showSuccess(`${orderItem.product_name} is now ${statusName}`);
+                    }
+                });
+            });
+            });
+        },
         async fetchCurrentOrders() {
             this.loadingStore.show("Loading orders...");
             this.loadingCurrentOrders = true;
@@ -152,6 +172,7 @@ export default {
                     }
                 }));
                 this.orders = orders;
+                // this.subscribeToStatusUpdates();
             } catch (error) {
                 console.error('Error fetching current orders:', error);
                 this.showError("Error fetching current orders!");
