@@ -15,7 +15,6 @@ export const TRANSACTION_API = {
         .listen('StationStatusUpdated', callback) // Match the event class name in Laravel
         echo.connector.pusher.connection.bind('state_change', (states) => {
             console.log('Pusher connection state changed:', states)
-            // this.fetchKitchenProductDetailsApi();
         });
         echo.connector.pusher.connection.bind('error', (err) => {
             console.error('Pusher error:', err)
