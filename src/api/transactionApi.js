@@ -1,4 +1,5 @@
 import apiClient from '../axios';
+import echo from '../resources/js/echo' ;
 
 export const TRANSACTION_API = {
     ENDPOINTS: {
@@ -6,6 +7,19 @@ export const TRANSACTION_API = {
         FETCH_STATION_STATUS: '/kitchen/station-status',
         FETCH_KITCHEN_PRODUCT: '/open/kitchen-product-details',
         CHANGE_KITCHEN_STATUS: '/kitchen/update-kitchen-product-status',
+    },
+
+    // ==================== WEB SOCKET METHODS ====================
+    subscribeToStatusUpdates(callback) {
+        echo.channel('station-status')
+        .listen('.status.updated', callback)
+        return () => echo.leave('station-status')
+    },
+
+    subscribeToOrder(orderId, callback) {
+        echo.private(`order.${orderId}`)
+        .listen('.order.updated', callback)
+        return () => echo.leave(`order.${orderId}`)
     },
 
     async fetchAllCurrentOrdersApi() {
@@ -128,9 +142,6 @@ export const TRANSACTION_API = {
                 { transactionId, orderStatus },
                 config
             );
-            if (!response.data) {
-                throw new Error('Invalid response from server');
-            }
             return response.data;
         } catch (error) {
             console.error('[TRANSACTION_API] Error updating order orderStatus:', error);

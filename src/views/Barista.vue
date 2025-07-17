@@ -58,8 +58,9 @@ import { useBranchStore } from '@/stores/branchStore';
 import { useTransactStore } from '@/stores/transactionStore';
 import { useStocksStore } from '@/stores/stocksStore';
 import { useLoadingStore } from '@/stores/loading';
-import Snackbar from '@/components/Snackbar.vue';
 import { reactive } from 'vue';
+import Snackbar from '@/components/Snackbar.vue';
+import { TRANSACTION_API } from '@/api/transactionApi';
 
 export default {
     // eslint-disable-next-line vue/multi-word-component-names
@@ -69,6 +70,7 @@ export default {
     },
     data() {
         return {
+            unsubscribe: null,
             iconSize: "70px",
             stockNotifQty: null,
             orders: [],
@@ -77,7 +79,14 @@ export default {
         }
     },
     mounted() {
+        this.unsubscribe = TRANSACTION_API.subscribeToStatusUpdates((data) => {
+            console.log('Real-time update:', data)
+            // Update your component state here
+        });
         this.fetchCurrentOrders();
+    },
+    beforeUnmount() {
+        this.unsubscribe?.();
     },
     setup() {
         const authStore = useAuthStore();
