@@ -118,25 +118,25 @@ export default {
         },
     },
     methods: {
-        subscribeToStatusUpdates() {
-            this.orders.forEach(order => {
-            order.order_items.forEach(item => {
-                const channelName = `update-station-status.${item.station_status_id}`;
-                echo.channel(channelName)
-                .listen('StationStatusUpdated', (data) => {
-                    console.log(`📡 Real-time update on ${channelName}:`, data);
-                    const orderItem = this.orders
-                    .flatMap(o => o.order_items)
-                    .find(i => i.station_status_id === data.station_status_id);
-                    if (orderItem) {
-                    orderItem.station_status_id = data.new_status;
-                    const statusName = this.getStatusName(data.new_status);
-                    this.showSuccess(`${orderItem.product_name} is now ${statusName}`);
-                    }
-                });
-            });
-            });
-        },
+        // subscribeToStatusUpdates() {
+        //     this.orders.forEach(order => {
+        //     order.order_items.forEach(item => {
+        //         const channelName = `update-station-status.${item.station_status_id}`;
+        //         echo.channel(channelName)
+        //         .listen('StationStatusUpdated', (data) => {
+        //             console.log(`📡 Real-time update on ${channelName}:`, data);
+        //             const orderItem = this.orders
+        //             .flatMap(o => o.order_items)
+        //             .find(i => i.station_status_id === data.station_status_id);
+        //             if (orderItem) {
+        //             orderItem.station_status_id = data.new_status;
+        //             const statusName = this.getStatusName(data.new_status);
+        //             this.showSuccess(`${orderItem.product_name} is now ${statusName}`);
+        //             }
+        //         });
+        //     });
+        //     });
+        // },
         async fetchCurrentOrders() {
             this.loadingStore.show("Loading orders...");
             this.loadingCurrentOrders = true;
