@@ -70,7 +70,6 @@ export default {
     },
     data() {
         return {
-            unsubscribe: null,
             iconSize: "70px",
             stockNotifQty: null,
             orders: [],
@@ -79,14 +78,10 @@ export default {
         }
     },
     mounted() {
-        this.unsubscribe = TRANSACTION_API.subscribeToStatusUpdates((data) => {
+        TRANSACTION_API.subscribeToStatusUpdates((data) => {
             console.log('Real-time update:', data)
-            // Update your component state here
         });
         this.fetchCurrentOrders();
-    },
-    beforeUnmount() {
-        this.unsubscribe?.();
     },
     setup() {
         const authStore = useAuthStore();

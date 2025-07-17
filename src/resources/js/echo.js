@@ -14,6 +14,7 @@ const echo = new Echo({
     forceTLS: process.env.VUE_APP_PUSHER_FORCE_TLS,
     encrypted: process.env.VUE_APP_PUSHER_ENCRYPTED,
     enableStats: false,
+    logToConsole: true,
     enabledTransports: ['ws', 'wss'],
     authEndpoint: '/broadcasting/auth', // for local development 
     auth: {

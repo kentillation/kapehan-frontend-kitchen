@@ -11,15 +11,16 @@ export const TRANSACTION_API = {
 
     // ==================== WEB SOCKET METHODS ====================
     subscribeToStatusUpdates(callback) {
-        echo.channel('station-status')
-        .listen('.status.updated', callback)
+        echo.private('station-status')
+        .listen('StationStatusUpdated', callback) // Match the event class name in Laravel
+        echo.connector.pusher.connection.bind('state_change', (states) => {
+            console.log('Pusher connection state changed:', states)
+            this.fetchKitchenProductDetailsApi();
+        });
+        echo.connector.pusher.connection.bind('error', (err) => {
+            console.error('Pusher error:', err)
+        });
         return () => echo.leave('station-status')
-    },
-
-    subscribeToOrder(orderId, callback) {
-        echo.private(`order.${orderId}`)
-        .listen('.order.updated', callback)
-        return () => echo.leave(`order.${orderId}`)
     },
 
     async fetchAllCurrentOrdersApi() {
