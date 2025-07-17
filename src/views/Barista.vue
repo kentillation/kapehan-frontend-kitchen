@@ -78,8 +78,19 @@ export default {
         }
     },
     mounted() {
-        TRANSACTION_API.subscribeToStatusUpdates((data) => {
-            console.log('Real-time update:', data)
+        this.orders.forEach(order => {
+            order.order_items.forEach(item => {
+                TRANSACTION_API.subscribeToStatusUpdates(item.station_status_id, (data) => {
+                    console.log('Real-time update:', data);
+                    // Update your local data here
+                    const orderItem = this.orders
+                        .flatMap(o => o.order_items)
+                        .find(i => i.station_status_id === data.new_status);
+                    if (orderItem) {
+                        orderItem.station_status_id = data.new_status;
+                    }
+                });
+            });
         });
         this.fetchCurrentOrders();
     },

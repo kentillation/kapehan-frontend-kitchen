@@ -20,14 +20,9 @@ module.exports = defineConfig({
   configureWebpack: {
     plugins: [
       new webpack.DefinePlugin({
-        // Define the feature flag to eliminate the warning
-        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
-
-          // VUE_APP_PUSHER_KEY: JSON.stringify(process.env.VUE_APP_PUSHER_KEY),
-          // VUE_APP_PUSHER_CLUSTER: JSON.stringify(process.env.VUE_APP_PUSHER_CLUSTER),
-          // VUE_APP_PUSHER_HOST: JSON.stringify(process.env.VUE_APP_PUSHER_HOST),
-          // VUE_APP_PUSHER_PORT: JSON.stringify(process.env.VUE_APP_PUSHER_PORT)
-
+        'process.env': {
+          // Don't redefine variables here unless absolutely necessary
+        }
       })
     ]
   }
