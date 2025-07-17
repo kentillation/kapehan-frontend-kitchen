@@ -13,7 +13,7 @@ const echo = new Echo({
     wssPort: process.env.VUE_APP_PUSHER_PORT, // remove in Production
     forceTLS: process.env.VUE_APP_PUSHER_FORCE_TLS,
     encrypted: process.env.VUE_APP_PUSHER_ENCRYPTED,
-    disableStats: true,
+    enableStats: false,
     enabledTransports: ['ws', 'wss'],
     authEndpoint: '/broadcasting/auth', // for local development 
     auth: {
