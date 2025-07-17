@@ -11,7 +11,7 @@ export const TRANSACTION_API = {
 
     // ==================== WEB SOCKET METHODS ====================
     subscribeToStatusUpdates(stationStatusId, callback) {
-        echo.private(`update-station-status.${stationStatusId}`)
+        echo.channel(`update-station-status.${stationStatusId}`)
             .listen('.status.updated', callback) // Match the event class name in Laravel
         return () => echo.leave('update-station-status')
     },
