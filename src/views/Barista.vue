@@ -60,7 +60,7 @@ import { useStocksStore } from '@/stores/stocksStore';
 import { useLoadingStore } from '@/stores/loading';
 import { reactive } from 'vue';
 import Snackbar from '@/components/Snackbar.vue';
-import echo from '../resources/js/echo' ;
+// import echo from '../resources/js/echo' ;
 
 export default {
     // eslint-disable-next-line vue/multi-word-component-names

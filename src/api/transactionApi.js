@@ -1,5 +1,5 @@
 import apiClient from '../axios';
-import echo from '../resources/js/echo' ;
+// import echo from '../resources/js/echo' ;
 
 export const TRANSACTION_API = {
     ENDPOINTS: {
@@ -10,11 +10,11 @@ export const TRANSACTION_API = {
     },
 
     // ==================== WEB SOCKET METHODS ====================
-    subscribeToStatusUpdates(stationStatusId, callback) {
-        echo.private(`update-station-status.${stationStatusId}`)
-            .listen('.status.updated', callback) // Match the event class name in Laravel
-        return () => echo.leave('update-station-status')
-    },
+    // subscribeToStatusUpdates(stationStatusId, callback) {
+    //     echo.private(`update-station-status.${stationStatusId}`)
+    //         .listen('.status.updated', callback) // Match the event class name in Laravel
+    //     return () => echo.leave('update-station-status')
+    // },
 
     async fetchAllCurrentOrdersApi() {
         try {
