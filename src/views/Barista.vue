@@ -1,12 +1,9 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <v-container>
-        <div class="d-flex align-center justify-space-between">
-            <h3 class="text-brown-lighten-1">Kitchen</h3>
-            <v-btn @click="fetchCurrentOrders" icon>
-                <v-icon>mdi-refresh</v-icon>
-            </v-btn>
-        </div>
+        <v-btn @click="this.fetchCurrentOrders" class="refresh bg-brown-darken-3" variant="flat" icon>
+            <v-icon>mdi-refresh</v-icon>
+        </v-btn>
         <v-sheet v-if="this.orders.length === 0" class="d-flex flex-column align-center text-center mx-auto mt-5" elevation="4" height="300" width="100%"
             rounded>
             <div class="w-50 mt-14">
@@ -303,5 +300,12 @@ export default {
 .v-chip:hover {
     opacity: 0.9;
     transform: scale(1.05);
+}
+
+.refresh {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    z-index: 1;
 }
 </style>
