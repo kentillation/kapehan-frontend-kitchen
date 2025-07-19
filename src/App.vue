@@ -20,7 +20,7 @@
             <v-badge v-if="stockNotificationQty >= 1" 
               :content="stockNotificationQty" 
               class="position-absolute" 
-              style="top: 5px; right: 9px;" 
+              style="top: 3px; right: 9px;" 
               color="error">
             </v-badge>
             <v-icon>mdi-bell-outline</v-icon>
