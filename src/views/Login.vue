@@ -1,6 +1,9 @@
 <template>
     <v-container>
         <v-sheet class="py-8 px-6 mx-auto ma-4" max-width="500" rounded="lg" width="100%">
+            <div class="d-flex justify-center mb-4">
+                <img :src="logo" style="min-width: 70px; width: 25%" alt="Poofsa Logo" />
+            </div>
             <h1 class="text-center">Poofsa <span class="text-secondary">.kitch</span></h1>
             <v-form ref="form" @submit.prevent="handleLogin" v-model="isFormValid" class="pa-4">
                 <div class="text-subtitle-1 text-medium-emphasis">Email</div>
@@ -12,7 +15,7 @@
                     density="compact"
                     autocomplete="username" />
 
-                <div class="text-subtitle-1 text-medium-emphasis mt-2">Password</div>
+                <div class="text-subtitle-1 text-medium-emphasis">Password</div>
                 <v-text-field v-model="kitchen_password" 
                     :rules="[requiredRule]"
                     placeholder="Type here..."
@@ -52,6 +55,7 @@ export default {
     },
     data() {
         return {
+            logo: require('@/assets/logo.svg'),
             kitchen_email: '',
             kitchen_password: '',
             showPassword: false,

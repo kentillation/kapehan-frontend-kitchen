@@ -17,12 +17,12 @@
           <h3 class="ms-1">{{ authStore.shopName }}</h3>
           <v-spacer></v-spacer>
           <v-btn icon>
-            <!-- added -->
-            <v-badge v-if="this.stockNotifQty >= 1" 
-              :content="this.stockNotifQty" 
+            <v-badge v-if="stockNotificationQty >= 1" 
+              :content="stockNotificationQty" 
               class="position-absolute" 
               style="top: 5px; right: 9px;" 
-              color="error"></v-badge>
+              color="error">
+            </v-badge>
             <v-icon>mdi-bell-outline</v-icon>
           </v-btn>
           <v-btn class="ms-0" icon>
@@ -50,10 +50,11 @@
 </template>
 
 <script>
+import { mapState } from 'pinia';
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useLoadingStore } from '@/stores/loading';
-import { useStocksStore } from '@/stores/stocksStore'; // added
+import { useStocksStore } from '@/stores/stocksStore';
 import GlobalLoader from '@/components/GlobalLoader.vue';
 import { useRoute } from 'vue-router';
 
@@ -62,18 +63,17 @@ export default {
   data () {
     return {
       stocks: [],
-      stockNotifQty: null, // added
     }
   },
   components: {
     GlobalLoader,
   },
-  mounted() {
-    this.fetchLowStocks(); // added
+  async mounted() {
+    await this.fetchLowStocks();
   },
   setup() {
     const authStore = useAuthStore();
-    const stocksStore = useStocksStore(); //added
+    const stocksStore = useStocksStore(); 
     const loadingStore = useLoadingStore();
     const connectionStatus = ref('online');
     const route = useRoute();
@@ -142,7 +142,7 @@ export default {
 
     return {
       authStore,
-      stocksStore, //added
+      stocksStore, 
       loadingStore,
       drawer: ref(true),
       open: ref(false),
@@ -153,6 +153,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(useStocksStore, ['stockNotificationQty']),
     showSidebar() {
       return this.$route.name !== 'LoginPage' && !this.isNotFoundPage;
     },
@@ -170,25 +171,6 @@ export default {
     toBarista() {
       this.$router.push('/barista');
     },
-    // added
-    async fetchLowStocks() {
-      try {
-        if (!this.authStore.branchId) {
-          console.error('Error fetching stocks!');
-          this.stocks = [];
-          return;
-        }
-        await this.stocksStore.fetchLowStocksStore(this.authStore.branchId);
-        if (this.stocksStore.stock_alert_qty === 0) {
-          this.stockNotifQty = 0;
-        } else {
-          this.stockNotifQty = this.stocksStore.stock_alert_qty;
-          console.log("Low stock qty:", this.stockNotifQty);
-        }
-      } catch (error) {
-        console.error('Error fetching stocks:', error);
-      }
-    },
     async showLogout() {
       this.drawer = false;
       await this.authStore.logout();
@@ -198,6 +180,18 @@ export default {
     },
     toAbout() {
       this.$router.push('/about');
+    },
+    async fetchLowStocks() {
+      try {
+        if (!this.authStore.branchId) {
+          console.error('Error fetching low stocks!');
+          this.stocks = [];
+          return;
+        }
+        await this.stocksStore.fetchLowStocksStore(this.authStore.branchId);
+      } catch (error) {
+        console.error('Error fetching stocks:', error);
+      }
     },
   }
 };

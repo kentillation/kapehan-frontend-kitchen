@@ -30,7 +30,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.589);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,7 +38,7 @@ export default {
 }
 
 .loader-content {
-    background: #462a0a;
+    /* background: #462a0a; */
     padding: 25px 40px;
     border-radius: 8px;
     text-align: center;
@@ -46,8 +46,8 @@ export default {
 }
 
 .loader {
-    --c1: #eba76c;
-    --c2: #97421a;
+    --c1: #ffb26e;
+    --c2: #da7b0e;
     width: 35px;
     height: 70px;
     border-top: 4px solid var(--c1);

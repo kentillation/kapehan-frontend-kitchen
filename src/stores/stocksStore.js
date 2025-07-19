@@ -4,6 +4,7 @@ import { STOCK_API } from '@/api/stocksApi';
 export const useStocksStore = defineStore('stocks', {
     state: () => ({
         stocks: [],
+        stock_alert_qty: null,
         loading: false,
         error: null
     }),
@@ -53,4 +54,7 @@ export const useStocksStore = defineStore('stocks', {
             }
         },
     },
+    getters: {
+        stockNotificationQty: (state) => state.stock_alert_qty || 0,
+    }
 });

@@ -49,10 +49,12 @@
 
         </v-row>
         <Snackbar ref="snackbarRef" />
+        <Alert ref="alertRef" />
     </v-container>
 </template>
 
 <script>
+import { mapState } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 import { useBranchStore } from '@/stores/branchStore';
 import { useTransactStore } from '@/stores/transactionStore';
@@ -60,6 +62,7 @@ import { useStocksStore } from '@/stores/stocksStore';
 import { useLoadingStore } from '@/stores/loading';
 import { reactive } from 'vue';
 import Snackbar from '@/components/Snackbar.vue';
+import Alert from '@/components/Alert.vue';
 // import echo from '../resources/js/echo' ;
 
 export default {
@@ -67,6 +70,7 @@ export default {
     name: 'Barista',
     components: {
         Snackbar,
+        Alert,
     },
     data() {
         return {
@@ -93,6 +97,7 @@ export default {
         //     });
         // });
         this.fetchCurrentOrders();
+        // this.fetchLowStocks();
     },
     setup() {
         const authStore = useAuthStore();
@@ -110,6 +115,7 @@ export default {
         return { authStore, branchStore, transactStore, stocksStore, loadingStore, activeCards, handleCardClick };
     },
     computed: {
+        ...mapState(useStocksStore, ['stockNotificationQty']),
         currentOrders() {
             return this.orders.map(order => ({
                 ...order,
@@ -138,7 +144,7 @@ export default {
         //     });
         // },
         async fetchCurrentOrders() {
-            this.loadingStore.show("Loading orders...");
+            this.loadingStore.show("");
             this.loadingCurrentOrders = true;
             try {
                 this.fetchLowStocks();
@@ -168,7 +174,6 @@ export default {
                             order_items: [],
                             error: true
                         });
-                        this.loadingStore.hide();
                     }
                 }));
                 this.orders = orders;
@@ -190,21 +195,6 @@ export default {
             } catch (error) {
                 console.error('Error fetching station status:', error);
                 this.showError("Error fetching station status!");
-            }
-        },
-
-        async fetchLowStocks() {
-            try {
-                await this.stocksStore.fetchLowStocksStore(this.authStore.branchId);
-                if (this.stocksStore.stock_alert_qty === 0) {
-                this.stockNotifQty = 0;
-                } else {
-                this.stockNotifQty = this.stocksStore.stock_alert_qty;
-                this.showError(`${ this.stockNotifQty } ${ this.stockNotifQty > 1 ? 'stocks' : 'stock' } has currently low quantity.`);
-                console.log("Low stock qty:", this.stockNotifQty);
-                }
-            } catch (error) {
-                console.error('Error fetching stocks:', error);
             }
         },
 
@@ -254,12 +244,26 @@ export default {
             } catch (error) {
                 console.error('Error updating status:', error);
                 this.showError("Failed to update. Please try again!");
+            } finally {
                 this.loadingStore.hide();
+            }
+        },
+
+        async fetchLowStocks() {
+            try {
+                await this.stocksStore.fetchLowStocksStore(this.authStore.branchId);
+                this.showAlert(`${ this.stockNotificationQty } ${ this.stockNotificationQty > 1 ? 'stocks' : 'stock' } has low quantity.`);
+            } catch (error) {
+                console.error('Error fetching stocks:', error);
             }
         },
 
         showError(message) {
             this.$refs.snackbarRef.showSnackbar(message, "error");
+        },
+
+        showAlert(message) {
+            this.$refs.alertRef.showSnackbarAlert(message, "error");
         },
 
         showSuccess(message) {
