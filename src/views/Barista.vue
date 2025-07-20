@@ -249,7 +249,9 @@ export default {
         async fetchLowStocks() {
             try {
                 await this.stocksStore.fetchLowStocksStore(this.authStore.branchId);
-                this.showAlert(`${ this.stockNotificationQty } ${ this.stockNotificationQty > 1 ? 'stocks' : 'stock' } has low quantity.`);
+                if (this.stockNotificationQty > 0) {
+                    this.showAlert(`${ this.stockNotificationQty } ${ this.stockNotificationQty > 1 ? 'stocks' : 'stock' } has low quantity.`);
+                }
             } catch (error) {
                 console.error('Error fetching stocks:', error);
             }
