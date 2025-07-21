@@ -154,10 +154,10 @@ export default {
                                 transaction_id: response.data.transaction_id,
                                 table_number: response.data.table_number,
                                 reference_number: order.reference_number,
-                                // order_items: response.data.all_orders || [],
                                 order_items: (response.data.all_orders || []).map(item => ({
                                     ...item,
-                                    showDialog: false // Initialize here
+                                    station_status_id: Number(item.station_status_id),
+                                    showDialog: false
                                 })),
                                 customer_name: response.data.customer_name,
                                 total_amount: response.data.total_amount,
