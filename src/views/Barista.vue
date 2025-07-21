@@ -4,8 +4,8 @@
         <v-btn @click="this.fetchCurrentOrders" class="refresh bg-brown-darken-3" variant="flat" icon>
             <v-icon>mdi-refresh</v-icon>
         </v-btn>
-        <v-sheet v-if="this.orders.length === 0" class="d-flex flex-column align-center text-center mx-auto mt-5" elevation="4" height="300" width="100%"
-            rounded>
+        <v-sheet v-if="this.orders.length === 0" class="d-flex flex-column align-center text-center mx-auto mt-5"
+            elevation="4" height="300" width="100%" rounded>
             <div class="w-50 mt-14">
                 <v-icon :size="iconSize" icon="mdi-food-off" class="text-red-darken-2 mb-3"></v-icon>
                 <h2 class="text-red-darken-2 mb-3">No order found!</h2>
@@ -13,9 +13,9 @@
             </div>
         </v-sheet>
         <v-row class="mt-2">
-            
             <v-col v-for="order in currentOrders" :key="order.reference_number" cols="12" lg="4" md="6" sm="6">
-                <v-card :class="{'active-card': activeCards[order.reference_number]}" @click="handleCardClick(order.reference_number)">
+                <v-card :class="{ 'active-card': activeCards[order.reference_number] }"
+                    @click="handleCardClick(order.reference_number)">
                     <v-card-title>
                         <h5><v-icon>mdi-table-chair</v-icon>&nbsp; Table #: {{ order.table_number }}</h5>
                         <v-spacer></v-spacer>
@@ -30,12 +30,46 @@
                             <p class="me-2" style="max-width: 120px;">
                                 {{ item.product_name }}{{ item.temp_label }}{{ item.size_label }}
                             </p>
-                            <p class="me-2">x{{ item.quantity }}</p>
+                            <h3 class="me-2">x{{ item.quantity }}</h3>
+                            <!-- <v-chip :color="getStatusColor(item.station_status_id)"
+                                :prepend-icon="getStatusIcon(item.station_status_id)"
+                                :disabled="item.station_status_id === 2" size="small" variant="flat" class="text-white"
+                                @click="openChangeStatusDialog">
+                                {{ getStatusName(item.station_status_id) }}
+                            </v-chip> -->
                             <v-chip :color="getStatusColor(item.station_status_id)"
-                                :prepend-icon="getStatusIcon(item.station_status_id)" @click="changeStatus(item)"
-                                size="small" variant="flat" class="text-white">
+                                :prepend-icon="getStatusIcon(item.station_status_id)"
+                                :disabled="item.station_status_id === 2"
+                                size="small" variant="flat" class="text-white"
+                                @click="openChangeStatusDialog">
                                 {{ getStatusName(item.station_status_id) }}
                             </v-chip>
+                            <v-dialog v-model="changeStatusDialog" width="auto" transition="dialog-bottom-transition">
+                                <v-btn @click="changeStatusDialog = false" class="position-absolute" size="small"
+                                    style="top: -50px;" icon>
+                                    <v-icon>mdi-close</v-icon>
+                                </v-btn>
+                                <v-card class="pa-3">
+                                    <h4>Order status confirmation</h4>
+                                    <v-card-text>
+                                        <div class="d-flex align-center justify-space-between">
+                                            <p class="me-2" style="max-width: 120px;">
+                                                {{ item.product_name }}{{ item.temp_label }}{{ item.size_label }}
+                                            </p>
+                                            <h3 class="me-2">x{{ item.quantity }}</h3>
+                                        </div>
+                                        <v-divider class="my-1"></v-divider>
+                                        <p class="my-4">Are you done with this order?</p>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-btn color="red" variant="tonal" @click="changeStatusDialog = false">Let me check
+                                            again!</v-btn>
+                                        <v-spacer></v-spacer>
+                                        <v-btn prepend-icon="mdi-check" color="green" variant="tonal" @click="changeStatus(item)">Yes</v-btn>
+                                        <!-- <v-btn prepend-icon="mdi-check" color="green" variant="tonal" @click="changeStatusDialog = false">Yes</v-btn> -->
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
                         </div>
                     </v-card-text>
                     <v-card-actions>
@@ -43,7 +77,6 @@
                     </v-card-actions>
                 </v-card>
             </v-col>
-
         </v-row>
         <Snackbar ref="snackbarRef" />
         <Alert ref="alertRef" />
@@ -51,16 +84,15 @@
 </template>
 
 <script>
+import { reactive } from 'vue';
 import { mapState } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 import { useBranchStore } from '@/stores/branchStore';
 import { useTransactStore } from '@/stores/transactionStore';
 import { useStocksStore } from '@/stores/stocksStore';
 import { useLoadingStore } from '@/stores/loading';
-import { reactive } from 'vue';
 import Snackbar from '@/components/Snackbar.vue';
 import Alert from '@/components/Alert.vue';
-// import echo from '../resources/js/echo' ;
 
 export default {
     // eslint-disable-next-line vue/multi-word-component-names
@@ -74,27 +106,13 @@ export default {
             iconSize: "70px",
             stockNotifQty: null,
             orders: [],
-            loadingCurrentOrders: false,
             station_statuses: [],
+            loadingCurrentOrders: false,
+            changeStatusDialog: false,
         }
     },
     mounted() {
-        // this.orders.forEach(order => {
-        //     order.order_items.forEach(item => {
-        //         TRANSACTION_API.subscribeToStatusUpdates(item.station_status_id, (data) => {
-        //             console.log('Real-time update:', data);
-        //             this.changeStatus(order);
-        //             const orderItem = this.orders
-        //                 .flatMap(o => o.order_items)
-        //                 .find(i => i.station_status_id === data.new_status);
-        //             if (orderItem) {
-        //                 orderItem.station_status_id = data.new_status;
-        //             }
-        //         });
-        //     });
-        // });
         this.fetchCurrentOrders();
-        // this.fetchLowStocks();
     },
     setup() {
         const authStore = useAuthStore();
@@ -121,25 +139,6 @@ export default {
         },
     },
     methods: {
-        // subscribeToStatusUpdates() {
-        //     this.orders.forEach(order => {
-        //     order.order_items.forEach(item => {
-        //         const channelName = `update-station-status.${item.station_status_id}`;
-        //         echo.channel(channelName)
-        //         .listen('StationStatusUpdated', (data) => {
-        //             console.log(`📡 Real-time update on ${channelName}:`, data);
-        //             const orderItem = this.orders
-        //             .flatMap(o => o.order_items)
-        //             .find(i => i.station_status_id === data.station_status_id);
-        //             if (orderItem) {
-        //             orderItem.station_status_id = data.new_status;
-        //             const statusName = this.getStatusName(data.new_status);
-        //             this.showSuccess(`${orderItem.product_name} is now ${statusName}`);
-        //             }
-        //         });
-        //     });
-        //     });
-        // },
         async fetchCurrentOrders() {
             this.loadingStore.show("");
             this.loadingCurrentOrders = true;
@@ -155,7 +154,7 @@ export default {
                             orders.push({
                                 transaction_id: response.data.transaction_id,
                                 table_number: response.data.table_number,
-                                reference_number: order.reference_number, // Only from initial response
+                                reference_number: order.reference_number,
                                 order_items: response.data.all_orders || [],
                                 customer_name: response.data.customer_name,
                                 total_amount: response.data.total_amount,
@@ -174,11 +173,10 @@ export default {
                     }
                 }));
                 this.orders = orders;
-                // this.subscribeToStatusUpdates();
             } catch (error) {
                 console.error('Error fetching current orders:', error);
                 this.showError("Error fetching current orders!");
-                this.orders = []; // Clear orders on major error
+                this.orders = [];
             } finally {
                 this.loadingCurrentOrders = false;
                 this.loadingStore.hide();
@@ -217,6 +215,7 @@ export default {
         },
 
         async changeStatus(order) {
+            this.changeStatusDialog = false;
             if (!order || !order.transaction_id) {
                 this.showError("Invalid order data!");
                 return;
@@ -250,7 +249,7 @@ export default {
             try {
                 await this.stocksStore.fetchLowStocksStore(this.authStore.branchId);
                 if (this.stockNotificationQty > 0) {
-                    this.showAlert(`${ this.stockNotificationQty } ${ this.stockNotificationQty > 1 ? 'stocks' : 'stock' } has low quantity.`);
+                    this.showAlert(`${this.stockNotificationQty} ${this.stockNotificationQty > 1 ? 'stocks' : 'stock'} has low quantity.`);
                 }
             } catch (error) {
                 console.error('Error fetching stocks:', error);
@@ -268,6 +267,10 @@ export default {
         showSuccess(message) {
             this.$refs.snackbarRef.showSnackbar(message, "success");
         },
+
+        openChangeStatusDialog() {
+            this.changeStatusDialog = true;
+        }
     },
 };
 </script>
@@ -285,13 +288,12 @@ export default {
 .v-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: rgba(72, 169, 166);
+    background-color: rgba(255, 247, 220, 0.842);
 }
 
 .v-card.active-card {
-    background-color: rgba(72, 169, 166) !important;
+    background-color: rgba(255, 247, 220, 0.842) !important;
     transition: background-color 0.5s ease 3s;
-    color: #fff8f8;
 }
 
 .v-chip {
