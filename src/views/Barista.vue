@@ -31,30 +31,32 @@
                                 {{ item.product_name }}{{ item.temp_label }}{{ item.size_label }}
                             </p>
                             <h3 class="me-2">x{{ item.quantity }}</h3>
-                            <!-- <v-chip :color="getStatusColor(item.station_status_id)"
+                            <v-chip :color="getStatusColor(item.station_status_id)"
                                 :prepend-icon="getStatusIcon(item.station_status_id)"
-                                :disabled="item.station_status_id === 2" size="small" variant="flat" class="text-white"
-                                @click="openChangeStatusDialog(item)">
+                                :disabled="item.station_status_id === 2" size="small" 
+                                variant="flat" 
+                                class="text-white"
+                                @click.stop="openChangeStatusDialog(item)">
                                 {{ getStatusName(item.station_status_id) }}
-                            </v-chip> -->
+                            </v-chip>
 
                             <!-- Dialog for this specific item -->
-                            <v-dialog v-model="item.showDialog" width="auto" transition="dialog-bottom-transition">
+                            <v-dialog v-model="item.showDialog" width="400" transition="dialog-bottom-transition">
                                 <v-btn @click="item.showDialog = false" class="position-absolute" size="small"
                                     style="top: -50px;" icon>
                                     <v-icon>mdi-close</v-icon>
                                 </v-btn>
                                 <v-card class="pa-3">
-                                    <h4>Order status confirmation</h4>
+                                    <h3>Order status confirmation</h3>
                                     <v-card-text>
-                                        <div class="d-flex align-center justify-space-between">
+                                        <div class="d-flex align-center justify-space-between mt-3">
                                             <p class="me-2" style="max-width: 120px;">
                                                 {{ item.product_name }}{{ item.temp_label }}{{ item.size_label }}
                                             </p>
                                             <h3 class="me-2">x{{ item.quantity }}</h3>
                                         </div>
                                         <v-divider class="my-1"></v-divider>
-                                        <p class="my-4">Are you done with this order?</p>
+                                        <p class="text-center my-6">Are you done with this order?</p>
                                     </v-card-text>
                                     <v-card-actions>
                                         <v-btn color="red" variant="tonal" @click="item.showDialog = false">Let me check
@@ -152,7 +154,11 @@ export default {
                                 transaction_id: response.data.transaction_id,
                                 table_number: response.data.table_number,
                                 reference_number: order.reference_number,
-                                order_items: response.data.all_orders || [],
+                                // order_items: response.data.all_orders || [],
+                                order_items: (response.data.all_orders || []).map(item => ({
+                                    ...item,
+                                    showDialog: false // Initialize here
+                                })),
                                 customer_name: response.data.customer_name,
                                 total_amount: response.data.total_amount,
                                 order_status_id: response.data.order_status_id
@@ -265,9 +271,14 @@ export default {
             this.$refs.snackbarRef.showSnackbar(message, "success");
         },
 
-        openChangeStatusDialog(item) {
-            // this.changeStatusDialog = true;
-            item.showDialog = true; 
+        openChangeStatusDialog(item) { 
+            try {
+                if (!item) return;
+                item.showDialog = true;
+            } catch (error) {
+                console.error('Error opening dialog:', error);
+                this.showError("Failed to open status dialog");
+            }
         }
     },
 };
@@ -287,6 +298,7 @@ export default {
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: rgba(255, 247, 220, 0.842);
+    color: #6b391c;
 }
 
 .v-card.active-card {
