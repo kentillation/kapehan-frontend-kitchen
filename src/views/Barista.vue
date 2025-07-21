@@ -197,7 +197,7 @@ export default {
         },
 
         getStatusName(statusId) {
-            const status = this.station_statuses.find(s => Number(s.station_status_id) === statusId);
+            const status = this.station_statuses.find(s => s.station_status_id === statusId);
             return status ? status.station_status : 'Unknown';
         },
 
@@ -231,7 +231,7 @@ export default {
                 return;
             }
             const nextStatusIndex = (currentStatusIndex + 1) % this.station_statuses.length;
-            const newStatus = this.station_statuses[nextStatusIndex].station_status_id;
+            const newStatus = Number(this.station_statuses[nextStatusIndex].station_status_id);
             this.loadingStore.show("Updating status...");
             try {
                 await this.transactStore.updateKitchenProductStatusStore(order.transaction_id, newStatus);
