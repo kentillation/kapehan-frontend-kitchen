@@ -231,7 +231,7 @@ export default {
                 return;
             }
             const nextStatusIndex = (currentStatusIndex + 1) % this.station_statuses.length;
-            const newStatus = Number(this.station_statuses[nextStatusIndex].station_status_id);
+            const newStatus = this.station_statuses[nextStatusIndex].station_status_id;
             this.loadingStore.show("Updating status...");
             try {
                 await this.transactStore.updateKitchenProductStatusStore(order.transaction_id, newStatus);
