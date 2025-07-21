@@ -31,21 +31,16 @@
                                 {{ item.product_name }}{{ item.temp_label }}{{ item.size_label }}
                             </p>
                             <h3 class="me-2">x{{ item.quantity }}</h3>
-                            <!-- <v-chip :color="getStatusColor(item.station_status_id)"
-                                :prepend-icon="getStatusIcon(item.station_status_id)"
-                                :disabled="item.station_status_id === 2" size="small" variant="flat" class="text-white"
-                                @click="openChangeStatusDialog">
-                                {{ getStatusName(item.station_status_id) }}
-                            </v-chip> -->
                             <v-chip :color="getStatusColor(item.station_status_id)"
                                 :prepend-icon="getStatusIcon(item.station_status_id)"
-                                :disabled="item.station_status_id === 2"
-                                size="small" variant="flat" class="text-white"
-                                @click="openChangeStatusDialog">
+                                :disabled="item.station_status_id === 2" size="small" variant="flat" class="text-white"
+                                @click="openChangeStatusDialog(item)">
                                 {{ getStatusName(item.station_status_id) }}
                             </v-chip>
-                            <v-dialog v-model="changeStatusDialog" width="auto" transition="dialog-bottom-transition">
-                                <v-btn @click="changeStatusDialog = false" class="position-absolute" size="small"
+
+                            <!-- Dialog for this specific item -->
+                            <v-dialog v-model="item.showDialog" width="auto" transition="dialog-bottom-transition">
+                                <v-btn @click="item.showDialog = false" class="position-absolute" size="small"
                                     style="top: -50px;" icon>
                                     <v-icon>mdi-close</v-icon>
                                 </v-btn>
@@ -62,11 +57,13 @@
                                         <p class="my-4">Are you done with this order?</p>
                                     </v-card-text>
                                     <v-card-actions>
-                                        <v-btn color="red" variant="tonal" @click="changeStatusDialog = false">Let me check
+                                        <v-btn color="red" variant="tonal" @click="item.showDialog = false">Let me check
                                             again!</v-btn>
                                         <v-spacer></v-spacer>
-                                        <v-btn prepend-icon="mdi-check" color="green" variant="tonal" @click="changeStatus(item)">Yes</v-btn>
-                                        <!-- <v-btn prepend-icon="mdi-check" color="green" variant="tonal" @click="changeStatusDialog = false">Yes</v-btn> -->
+                                        <v-btn prepend-icon="mdi-check" color="green" variant="tonal"
+                                            @click="changeStatus(item); item.showDialog = false">
+                                            Yes
+                                        </v-btn>
                                     </v-card-actions>
                                 </v-card>
                             </v-dialog>
@@ -268,8 +265,9 @@ export default {
             this.$refs.snackbarRef.showSnackbar(message, "success");
         },
 
-        openChangeStatusDialog() {
-            this.changeStatusDialog = true;
+        openChangeStatusDialog(item) {
+            // this.changeStatusDialog = true;
+            item.showDialog = true; 
         }
     },
 };
