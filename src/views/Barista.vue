@@ -197,7 +197,7 @@ export default {
         },
 
         getStatusName(statusId) {
-            const status = this.station_statuses.find(s => s.station_status_id === statusId);
+            const status = this.station_statuses.find(s => Number(s.station_status_id) === statusId);
             return status ? status.station_status : 'Unknown';
         },
 
@@ -205,7 +205,7 @@ export default {
             switch (statusId) {
                 case 1: return 'orange'; // Add to tray
                 case 2: return 'green';  // Added to tray
-                // default: return 'grey';  // Unknown status
+                default: return 'grey';  // Unknown status
             }
         },
 
@@ -213,7 +213,7 @@ export default {
             switch (statusId) {
                 case 1: return 'mdi-information-outline';  // Add to tray
                 case 2: return 'mdi-check'; // Added to tray
-                // default: return 'mdi-help-circle'; // Unknown
+                default: return 'mdi-help-circle'; // Unknown
             }
         },
 
