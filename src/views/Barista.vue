@@ -31,12 +31,12 @@
                                 {{ item.product_name }}{{ item.temp_label }}{{ item.size_label }}
                             </p>
                             <h3 class="me-2">x{{ item.quantity }}</h3>
-                            <v-chip :color="getStatusColor(item.station_status_id)"
+                            <!-- <v-chip :color="getStatusColor(item.station_status_id)"
                                 :prepend-icon="getStatusIcon(item.station_status_id)"
                                 :disabled="item.station_status_id === 2" size="small" variant="flat" class="text-white"
                                 @click="openChangeStatusDialog(item)">
                                 {{ getStatusName(item.station_status_id) }}
-                            </v-chip>
+                            </v-chip> -->
 
                             <!-- Dialog for this specific item -->
                             <v-dialog v-model="item.showDialog" width="auto" transition="dialog-bottom-transition">
