@@ -6,7 +6,7 @@
             <div class="w-50 mt-10">
                 <v-icon :size="iconSize" icon="mdi-web-off" class="text-red-darken-2 mb-3"></v-icon>
                 <h2 class="text-red-darken-2 mb-3">Page not found!</h2>
-                <h4 class="mb-3">The page you are trying to navigate is not found.</h4>
+                <p class="mb-3">The page you are trying to navigate is not found.</p>
             </div>
         </v-card>
     </v-container>

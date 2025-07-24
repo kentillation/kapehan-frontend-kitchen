@@ -32,7 +32,7 @@
         <v-navigation-drawer class="h-screen pa-3" v-model="drawer" v-if="showSidebar">
           <v-list density="compact" nav>
             <v-list-subheader size="30">Menu</v-list-subheader>
-            <v-list-item prepend-icon="mdi-faucet-variant" @click="toBarista" class="ps-5 bg-brown-darken-3"
+            <v-list-item prepend-icon="mdi-faucet-variant" @click="toKitchen" class="ps-5 bg-brown-darken-3"
               style="border-radius: 30px;">Kitchen</v-list-item>
             <v-list-item prepend-icon="mdi-cog-outline" @click="toSettings" class="bg-brown-darken-3 ps-5"
               style="border-radius: 30px;">Settings</v-list-item>
@@ -168,8 +168,8 @@ export default {
     toSettings() {
       this.$router.push('/settings');
     },
-    toBarista() {
-      this.$router.push('/barista');
+    toKitchen() {
+      this.$router.push('/kitchen');
     },
     async showLogout() {
       this.drawer = false;

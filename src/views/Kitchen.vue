@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <v-container>
+        <h3 class="text-brown-lighten-1">Kitchen</h3>
         <v-btn @click="this.fetchCurrentOrders" class="refresh bg-brown-darken-3" variant="flat" icon>
             <v-icon>mdi-refresh</v-icon>
         </v-btn>
@@ -12,7 +13,7 @@
                 <p class="text-grey mb-3">Looks like there is no currently order yet.</p>
             </div>
         </v-sheet>
-        <v-row class="mt-2">
+        <v-row class="mt-1">
             <v-col v-for="order in currentOrders" :key="order.reference_number" cols="12" lg="4" md="6" sm="6">
                 <v-card :class="{ 'active-card': activeCards[order.reference_number] }"
                     @click="handleCardClick(order.reference_number)">
@@ -47,7 +48,7 @@
                                     <v-icon>mdi-close</v-icon>
                                 </v-btn>
                                 <v-card class="pa-3">
-                                    <h3>Order status confirmation</h3>
+                                    <h3>Confirmation</h3>
                                     <v-card-text>
                                         <div class="d-flex align-center justify-space-between mt-3">
                                             <p class="me-2" style="max-width: 120px;">

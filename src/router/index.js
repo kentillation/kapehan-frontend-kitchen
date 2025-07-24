@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import NotFound from '@/views/NotFound.vue';
 import LoginPage from '@/views/Login.vue';
 import Register from '@/views/Register.vue';
-import Barista from '@/views/Barista.vue';
+import Kitchen from '@/views/Kitchen.vue';
 import Settings from '@/views/Settings.vue';
 import Help from '@/views/Help.vue';
 import About from '@/views/About.vue';
@@ -13,7 +13,7 @@ const routes = [
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
     { path: '/', name: 'LoginPage', component: LoginPage, meta: { requiresAuth: false } },
     { path: '/register', name: 'Register', component: Register },
-    { path: '/barista', name: 'Barista', component: Barista, meta: { requiresAuth: true } },
+    { path: '/kitchen', name: 'Kitchen', component: Kitchen, meta: { requiresAuth: true } },
     { path: '/settings', name: 'Settings', component: Settings, meta: { requiresAuth: true } },
     { path: '/help', name: 'Help', component: Help, meta: { requiresAuth: true } },
     { path: '/about', name: 'About', component: About, meta: { requiresAuth: true } },

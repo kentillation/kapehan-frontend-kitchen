@@ -3,7 +3,7 @@ import apiClient from '../axios';
 
 export const TRANSACTION_API = {
     ENDPOINTS: {
-        FETCH_CURRENT_ORDERS: '/open/current-orders',
+        FETCH_CURRENT_ORDERS: '/kitchen/current-orders',
         FETCH_STATION_STATUS: '/kitchen/station-status',
         FETCH_KITCHEN_PRODUCT: '/open/kitchen-product-details',
         CHANGE_KITCHEN_STATUS: '/kitchen/update-kitchen-product-status',
