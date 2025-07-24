@@ -85,7 +85,7 @@ export default {
                 this.loadingStore.show('Logging in...');
                 const authStore = useAuthStore();
                 await authStore.login({ kitchen_email: this.kitchen_email, kitchen_password: this.kitchen_password });
-                window.location.href = '/barista';
+                window.location.href = '/kitchen';
             } catch (error) {
                 this.loadingStore.hide();
                 this.showSnackbar(error || 'Login failed. Please try again!', 'error');
