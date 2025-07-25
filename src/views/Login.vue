@@ -82,7 +82,7 @@ export default {
 
             this.loading = true;
             try {
-                this.loadingStore.show('Logging in...');
+                this.loadingStore.show('');
                 const authStore = useAuthStore();
                 await authStore.login({ kitchen_email: this.kitchen_email, kitchen_password: this.kitchen_password });
                 window.location.href = '/kitchen';
