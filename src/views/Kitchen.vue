@@ -155,7 +155,7 @@ export default {
                                 transaction_id: response.data.transaction_id,
                                 table_number: response.data.table_number,
                                 reference_number: order.reference_number,
-                                order_items: (response.data.all_orders || []).map(item => ({
+                                order_items: Object.values(response.data.all_orders || {}).map(item => ({
                                     ...item,
                                     station_status_id: Number(item.station_status_id),
                                     showDialog: false
