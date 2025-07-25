@@ -10,7 +10,7 @@
             <div class="mt-14">
                 <v-icon :size="iconSize" icon="mdi-food-off" class="text-red-darken-2 mb-3"></v-icon>
                 <h2 class="text-red-darken-2 mb-3">No order found!</h2>
-                <p class="text-grey mb-3">Looks like there is no currently order yet.</p>
+                <p class="text-grey mb-3 mx-3">Looks like there is no order found for kitchen station.</p>
             </div>
         </v-sheet>
         <v-row class="mt-1">
