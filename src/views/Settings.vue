@@ -69,47 +69,76 @@
                 </div>
             </v-card>
         </v-dialog>
+        <Alert ref="alertRef" />
     </v-container>
 </template>
 
 <script>
 import { useTheme } from 'vuetify';
 import { ref, computed } from 'vue';
+import { mapState } from 'pinia';
+import { useAuthStore } from '@/stores/auth';
+import { useStocksStore } from '@/stores/stocksStore';
+import Alert from '@/components/Alert.vue';
 
 export default {
     // eslint-disable-next-line vue/multi-word-component-names
     name: 'Settings',
+    components: {
+        Alert,
+    },
     data() {
         return {
             accountDialog: false,
         }
     },
+    mounted() {
+        this.fetchLowStocks();
+    },
     setup() {
+        const authStore = useAuthStore();
         const theme = useTheme();
         const themeDialog = ref(false);
         const selectedTheme = ref(theme.global.name.value);
-
         const currentThemeName = computed(() => {
             return theme.global.name.value === 'dark' ? 'Dark' : 'Light';
         });
-
         const applyTheme = () => {
             theme.global.name.value = selectedTheme.value;
             localStorage.setItem('theme', selectedTheme.value);
             themeDialog.value = false;
         };
+        const stocksStore = useStocksStore();
 
         return {
+            authStore,
             theme,
             themeDialog,
             selectedTheme,
             currentThemeName,
-            applyTheme
+            applyTheme,
+            stocksStore
         };
+    },
+    computed: {
+        ...mapState(useStocksStore, ['stockNotificationQty']),
     },
     methods: {
         openAccountDialog() {
             this.accountDialog = true;
+        },
+        async fetchLowStocks() {
+            try {
+                await this.stocksStore.fetchLowStocksStore(this.authStore.branchId);
+                if (this.stockNotificationQty > 0) {
+                    this.showAlert(`${this.stockNotificationQty} ${this.stockNotificationQty > 1 ? 'stocks' : 'stock'} has low quantity.`);
+                }
+            } catch (error) {
+                console.error('Error fetching stocks:', error);
+            }
+        },
+        showAlert(message) {
+            this.$refs.alertRef.showSnackbarAlert(message, "error");
         },
     },
 };

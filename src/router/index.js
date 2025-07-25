@@ -34,7 +34,7 @@ router.beforeEach(async (to) => {
     }
     
     if (to.path === '/' && authStore.isAuthenticated) {
-        return '/barista';
+        return '/kitchen';
     }
 });
 

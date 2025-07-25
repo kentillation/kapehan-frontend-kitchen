@@ -11,16 +11,14 @@
     <v-main>
       <template v-if="!isNotFoundPage">
         <v-app-bar v-if="showMenu" prominent>
-          <v-btn @click.stop="drawer = !drawer" icon>
-            <v-icon>mdi-menu</v-icon>
-          </v-btn>
+          <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
           <h3 class="ms-1">{{ authStore.shopName }}</h3>
           <v-spacer></v-spacer>
           <v-btn icon>
             <v-badge v-if="stockNotificationQty >= 1" 
               :content="stockNotificationQty" 
               class="position-absolute" 
-              style="top: 3px; right: 9px;" 
+              style="top: 2px; right: 9px;" 
               color="error">
             </v-badge>
             <v-icon>mdi-bell-outline</v-icon>
