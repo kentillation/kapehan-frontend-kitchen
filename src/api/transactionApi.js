@@ -5,7 +5,7 @@ export const TRANSACTION_API = {
     ENDPOINTS: {
         FETCH_CURRENT_ORDERS: '/kitchen/current-orders',
         FETCH_STATION_STATUS: '/kitchen/station-status',
-        FETCH_KITCHEN_PRODUCT: '/open/kitchen-product-details',
+        FETCH_KITCHEN_PRODUCT: '/kitchen/kitchen-product-details',
         CHANGE_KITCHEN_STATUS: '/kitchen/update-kitchen-product-status',
     },
 
@@ -116,8 +116,8 @@ export const TRANSACTION_API = {
         }
     },
 
-    async updateKitchenProductStatusApi(transactionId, orderStatus) {
-        if (!transactionId || !orderStatus) {
+    async updateKitchenProductStatusApi(productId, transactionId, orderStatus) {
+        if (!productId || !transactionId || !orderStatus) {
             throw new Error('Invalid transactionId or orderStatus');
         }
         try {
@@ -133,7 +133,7 @@ export const TRANSACTION_API = {
             };
             const response = await apiClient.put(
                 `${this.ENDPOINTS.CHANGE_KITCHEN_STATUS}`,
-                { transactionId, orderStatus },
+                { productId, transactionId, orderStatus },
                 config
             );
             return response.data;

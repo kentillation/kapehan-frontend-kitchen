@@ -90,14 +90,14 @@ export const useTransactStore = defineStore('transactionData', {
         },
 
         // New
-        async updateKitchenProductStatusStore(transactionId, orderStatus) {
+        async updateKitchenProductStatusStore(productId, transactionId, orderStatus) {
             this.loading = true;
             this.error = null;
             try {
-                if (!transactionId || !orderStatus) {
+                if (!productId || !transactionId || !orderStatus) {
                     throw new Error('Invalid transactionId or orderStatus');
                 }
-                const response = await TRANSACTION_API.updateKitchenProductStatusApi(transactionId, orderStatus);
+                const response = await TRANSACTION_API.updateKitchenProductStatusApi(productId, transactionId, orderStatus);
                 if (response && response.status === true) {
                     this.currentOrders = this.currentOrders.map(order =>
                         order.id === transactionId ? { ...order, orderStatus } : order
