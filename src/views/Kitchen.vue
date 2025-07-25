@@ -7,7 +7,7 @@
         </v-btn>
         <v-sheet v-if="this.orders.length === 0" class="d-flex flex-column align-center text-center mx-auto mt-5"
             elevation="4" height="300" width="100%" rounded>
-            <div class="w-50 mt-14">
+            <div class="mt-14">
                 <v-icon :size="iconSize" icon="mdi-food-off" class="text-red-darken-2 mb-3"></v-icon>
                 <h2 class="text-red-darken-2 mb-3">No order found!</h2>
                 <p class="text-grey mb-3">Looks like there is no currently order yet.</p>
