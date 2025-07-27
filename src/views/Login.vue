@@ -5,7 +5,11 @@
                 <div class="d-flex justify-center mb-4">
                     <img :src="logo" loading="lazy" alt="Poofsa Logo" />
                 </div>
-                <h1 class="text-center">Poofsa <span class="text-red">.kitch</span></h1>
+                <h1 class="text-center">
+                    Poofsa 
+                    <span class="text-red">.kitch</span>
+                    <v-chip color="#0090b6" size="x-small" class="position-absolute">BETA</v-chip>
+                </h1>
                 <v-form ref="form" @submit.prevent="handleLogin" v-model="isFormValid" class="pa-4">
                     <div class="text-subtitle-1 text-medium-emphasis">Email</div>
                     <v-text-field v-model="kitchen_email" 
@@ -32,7 +36,9 @@
                         Proceed
                     </v-btn>
                 </v-form>
-                <h6 class="text-center text-grey mt-5">Poofsa .kitch BETA Version v1.0.0</h6>
+                <div class="text-center mb-5">
+                    <p color="#0090b6" style="cursor: pointer;" @click="$router.push('/forgot-password')">Forgot password?</p>
+                </div>
             </v-sheet>
             <v-snackbar v-model="snackbar.visible" :color="snackbar.color" timeout="4000" top>
                 {{ snackbar.message }}

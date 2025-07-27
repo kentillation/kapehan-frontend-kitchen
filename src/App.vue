@@ -160,9 +160,6 @@ export default {
     },
   },
   methods: {
-    // hideNotFoundPage() {
-    //   return this.$route.name !== 'NotFound';
-    // },
     toSettings() {
       this.$router.push('/settings');
     },
