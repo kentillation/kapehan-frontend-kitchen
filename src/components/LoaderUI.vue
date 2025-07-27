@@ -46,8 +46,8 @@ export default {
 }
 
 .loader {
-    --c1: #ffb26e;
-    --c2: #da7b0e;
+    --c1: #63ddff;
+    --c2: #0090b6;
     width: 35px;
     height: 70px;
     border-top: 4px solid var(--c1);
@@ -90,7 +90,7 @@ export default {
 
 .loader-message {
     margin-top: 15px;
-    color: #eba76c;
+    color: #63ddff;
 }
 
 @keyframes l5-0 {

@@ -1,8 +1,8 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <v-container>
-        <h3 class="text-brown-lighten-1">Kitchen</h3>
-        <v-btn @click="this.fetchCurrentOrders" class="refresh bg-brown-darken-3" variant="flat" icon>
+        <h3>Kitchen</h3>
+        <v-btn @click="this.fetchCurrentOrders" class="refresh" color="#0090b6" variant="flat" icon>
             <v-icon>mdi-refresh</v-icon>
         </v-btn>
         <v-sheet v-if="this.orders.length === 0" class="d-flex flex-column align-center text-center mx-auto mt-5"
@@ -28,10 +28,10 @@
                         </v-alert>
                         <div v-else v-for="(item, index) in order.order_items" :key="index"
                             class="d-flex align-center justify-space-between mt-1">
-                            <p class="me-2" style="max-width: 120px;">
+                            <span class="me-2" style="max-width: 120px;">
                                 {{ item.product_name }}{{ item.temp_label }}{{ item.size_label }}
-                            </p>
-                            <h3 class="me-2">x{{ item.quantity }}</h3>
+                            </span>
+                            <span class="me-2"><strong>x{{ item.quantity }}</strong></span>
                             <v-chip :color="getStatusColor(item.station_status_id)"
                                 :prepend-icon="getStatusIcon(item.station_status_id)"
                                 :disabled="item.station_status_id === 2" size="small" 
@@ -73,7 +73,7 @@
                         </div>
                     </v-card-text>
                     <v-card-actions>
-                        <span class="ms-3">Ref. #: {{ order.reference_number }}</span>
+                        <span class="ms-3" style="color: #0090b6;">Ref. #: {{ order.reference_number }}</span>
                     </v-card-actions>
                 </v-card>
             </v-col>

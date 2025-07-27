@@ -1,42 +1,44 @@
 <template>
-    <v-container>
-        <v-sheet class="py-8 px-6 mx-auto ma-4" max-width="500" rounded="lg" width="100%">
-            <div class="d-flex justify-center mb-4">
-                <img :src="logo" style="min-width: 70px; width: 25%" alt="Poofsa Logo" />
-            </div>
-            <h1 class="text-center">Poofsa <span class="text-secondary">.kitch</span></h1>
-            <v-form ref="form" @submit.prevent="handleLogin" v-model="isFormValid" class="pa-4">
-                <div class="text-subtitle-1 text-medium-emphasis">Email</div>
-                <v-text-field v-model="kitchen_email" 
-                    :rules="[requiredRule, emailFormatRule]"
-                    placeholder="Type here..."
-                    prepend-inner-icon="mdi-email-outline"
-                    variant="outlined"
-                    density="compact"
-                    autocomplete="username" />
+    <div class="login-bg">
+        <v-container class="fill-height d-flex align-center justify-center">
+            <v-sheet class="pa-6 mx-auto ma-4" max-width="500" rounded="lg" width="100%">
+                <div class="d-flex justify-center mb-4">
+                    <img :src="logo" loading="lazy" alt="Poofsa Logo" />
+                </div>
+                <h1 class="text-center">Poofsa <span class="text-red">.kitch</span></h1>
+                <v-form ref="form" @submit.prevent="handleLogin" v-model="isFormValid" class="pa-4">
+                    <div class="text-subtitle-1 text-medium-emphasis">Email</div>
+                    <v-text-field v-model="kitchen_email" 
+                        :rules="[requiredRule, emailFormatRule]"
+                        placeholder="Type here..."
+                        prepend-inner-icon="mdi-email-outline"
+                        variant="outlined"
+                        density="compact"
+                        autocomplete="username" />
 
-                <div class="text-subtitle-1 text-medium-emphasis">Password</div>
-                <v-text-field v-model="kitchen_password" 
-                    :rules="[requiredRule]"
-                    placeholder="Type here..."
-                    prepend-inner-icon="mdi-lock-outline" 
-                    variant="outlined"
-                    density="compact" 
-                    autocomplete="current-password"
-                    :type="showPassword ? 'text' : 'password'"
-                    :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye-outline'" 
-                    @click:append-inner="showPassword = !showPassword" />
+                    <div class="text-subtitle-1 text-medium-emphasis">Password</div>
+                    <v-text-field v-model="kitchen_password" 
+                        :rules="[requiredRule]"
+                        placeholder="Type here..."
+                        prepend-inner-icon="mdi-lock-outline" 
+                        variant="outlined"
+                        density="compact" 
+                        autocomplete="current-password"
+                        :type="showPassword ? 'text' : 'password'"
+                        :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye-outline'" 
+                        @click:append-inner="showPassword = !showPassword" />
 
-                <v-btn :disabled="!isFormValid || loading" type="submit" color="#0090b6" size="large" class="mt-5" height="45" block rounded>
-                    Proceed
-                </v-btn>
-            </v-form>
-            <h6 class="text-center text-grey mt-5">Poofsa .kitch UAT Version v1.0.0</h6>
-        </v-sheet>
-        <v-snackbar v-model="snackbar.visible" :color="snackbar.color" timeout="4000" top>
-            {{ snackbar.message }}
-        </v-snackbar>
-    </v-container>
+                    <v-btn :disabled="!isFormValid || loading" type="submit" color="#0090b6" size="large" class="mt-5" height="45" block rounded>
+                        Proceed
+                    </v-btn>
+                </v-form>
+                <h6 class="text-center text-grey mt-5">Poofsa .kitch BETA Version v1.0.0</h6>
+            </v-sheet>
+            <v-snackbar v-model="snackbar.visible" :color="snackbar.color" timeout="4000" top>
+                {{ snackbar.message }}
+            </v-snackbar>
+        </v-container>
+    </div>
 </template>
 
 <script>
@@ -103,15 +105,52 @@ export default {
 </script>
 
 <style scoped>
+.login-bg {
+    min-height: 100vh;
+    min-width: 100vw;
+    width: 100vw;
+    height: 100vh;
+    background: url('@/assets/Login-Bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.login-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px) saturate(180%);
+    -webkit-backdrop-filter: blur(8px) saturate(180%);
+    z-index: 1;
+    pointer-events: none;
+    border-radius: inherit;
+}
+
 .v-container {
     display: grid;
     place-items: center;
     height: 100vh;
-    background-color: var(--v-theme-background);
+    position: relative;
+    z-index: 2;
 }
+
 .v-sheet {
-    border: 1.5px solid #0090b6;
+    position: relative;
+    z-index: 3;
 }
+
+img {
+    min-width: 70px;
+    width: 25%;
+    border-radius: 10px;
+}
+
 .v-input__details {
     display: flex;
 }

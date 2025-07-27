@@ -12,7 +12,7 @@
       <template v-if="!isNotFoundPage">
         <v-app-bar v-if="showMenu" prominent>
           <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-          <h3 class="ms-1">{{ authStore.shopName }}</h3>
+          <span><strong>{{ authStore.shopName }}</strong></span>
           <v-spacer></v-spacer>
           <v-btn icon>
             <v-badge v-if="stockNotificationQty >= 1" 
@@ -30,11 +30,11 @@
         <v-navigation-drawer class="h-screen pa-3" v-model="drawer" v-if="showSidebar">
           <v-list density="compact" nav>
             <v-list-subheader size="30">Menu</v-list-subheader>
-            <v-list-item prepend-icon="mdi-faucet-variant" @click="toKitchen" class="ps-5 bg-brown-darken-3"
+            <v-list-item prepend-icon="mdi-faucet-variant" @click="toKitchen" class="ps-3"
               style="border-radius: 30px;">Kitchen</v-list-item>
-            <v-list-item prepend-icon="mdi-cog-outline" @click="toSettings" class="bg-brown-darken-3 ps-5"
+            <v-list-item prepend-icon="mdi-cog-outline" @click="toSettings" class="ps-3"
               style="border-radius: 30px;">Settings</v-list-item>
-            <v-list-item prepend-icon="mdi-door-open" @click="showLogout" class="ps-5 bg-brown-darken-3"
+            <v-list-item prepend-icon="mdi-door-open" @click="showLogout" class="ps-3"
               style="border-radius: 30px;">Sign Out</v-list-item>
           </v-list>
         </v-navigation-drawer>
