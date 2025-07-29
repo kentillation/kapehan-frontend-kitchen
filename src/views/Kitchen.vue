@@ -49,23 +49,22 @@
                                 </v-btn>
                                 <v-card class="pa-3">
                                     <h3>Confirmation</h3>
-                                    <v-card-text>
-                                        <div class="d-flex align-center justify-space-between mt-3">
-                                            <p class="me-2" style="max-width: 120px;">
-                                                {{ item.product_name }}{{ item.temp_label }}{{ item.size_label }}
-                                            </p>
-                                            <h3 class="me-2">x{{ item.quantity }}</h3>
-                                        </div>
-                                        <v-divider class="my-1"></v-divider>
-                                        <p class="text-center my-6">Are you done with this order?</p>
+                                    <v-card-text class="d-flex flex-column">
+                                        <span style="font-size: 16px;">
+                                            <strong>Table #: {{ order.table_number }}</strong>
+                                        </span>
+                                        <span class="mb-3" style="font-size: 16px;">
+                                            <strong>{{ item.product_name }}{{ item.temp_label }}{{ item.size_label }}</strong>
+                                        </span>
+                                        <span class="text-center">Are you done with this order?</span>
                                     </v-card-text>
-                                    <v-card-actions>
-                                        <v-btn color="red" variant="tonal" @click="item.showDialog = false">Let me check
-                                            again!</v-btn>
+                                    <v-card-actions class="d-flex">
+                                        <v-btn color="red" variant="tonal" class="px-3 pt-1 pb-6" prepend-icon="mdi-close"
+                                            @click="item.showDialog = false">Let me check again!
+                                        </v-btn>
                                         <v-spacer></v-spacer>
-                                        <v-btn prepend-icon="mdi-check" color="green" variant="tonal"
-                                            @click="changeStatus(item); item.showDialog = false">
-                                            Yes
+                                        <v-btn color="green" variant="tonal" class="px-3 pt-1 pb-6" prepend-icon="mdi-check"
+                                            @click="changeStatus(item); item.showDialog = false">Yes
                                         </v-btn>
                                     </v-card-actions>
                                 </v-card>
