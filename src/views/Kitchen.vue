@@ -54,7 +54,7 @@
                                             <strong>Table #: {{ order.table_number }}</strong>
                                         </span>
                                         <span class="mb-3" style="font-size: 16px;">
-                                            <strong>{{ item.product_name }}{{ item.temp_label }}{{ item.size_label }}</strong>
+                                            <strong>{{ item.product_name }}{{ item.temp_label }}{{ item.size_label }} &nbsp; x{{ item.quantity }}</strong>
                                         </span>
                                         <span class="text-center">Are you done with this order?</span>
                                     </v-card-text>
