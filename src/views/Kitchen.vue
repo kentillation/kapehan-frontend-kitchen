@@ -31,7 +31,7 @@
                             <span class="me-2" style="max-width: 120px;">
                                 {{ item.product_name }}{{ item.temp_label }}{{ item.size_label }}
                             </span>
-                            <span class="me-2"><strong>x{{ item.quantity }}</strong></span>
+                            <span class="me-2" style="font-size: 18px;"><strong>x{{ item.quantity }}</strong></span>
                             <v-chip :color="getStatusColor(item.station_status_id)"
                                 :prepend-icon="getStatusIcon(item.station_status_id)"
                                 :disabled="item.station_status_id === 2" size="small" 
@@ -43,28 +43,28 @@
 
                             <!-- Dialog for this specific item -->
                             <v-dialog v-model="item.showDialog" width="400" transition="dialog-bottom-transition">
-                                <v-btn @click="item.showDialog = false" class="position-absolute" size="small"
-                                    style="top: -50px;" icon>
+                                <v-btn @click="item.showDialog = false" color="#0090b6" class="position-absolute" size="small"
+                                    style="top: -20px; right: -17px; z-index: 10;" icon>
                                     <v-icon>mdi-close</v-icon>
                                 </v-btn>
                                 <v-card class="pa-3">
                                     <h3>Confirmation</h3>
-                                    <v-card-text class="d-flex flex-column">
+                                    <div class="ms-2 my-3 d-flex flex-column">
                                         <span style="font-size: 16px;">
                                             <strong>Table #: {{ order.table_number }}</strong>
                                         </span>
-                                        <span class="mb-3" style="font-size: 16px;">
-                                            <strong>{{ item.product_name }}{{ item.temp_label }}{{ item.size_label }} &nbsp; x{{ item.quantity }}</strong>
+                                        <span class="mt-1" style="font-size: 16px;">
+                                            <strong>{{ item.product_name }}{{ item.temp_label }}{{ item.size_label }} &nbsp; &nbsp; &nbsp; x{{ item.quantity }}</strong>
                                         </span>
-                                        <span class="text-center">Are you done with this order?</span>
-                                    </v-card-text>
+                                    </div>
+                                    <span class="my-2 text-center">Are you done with this order?</span>
                                     <v-card-actions class="d-flex">
                                         <v-btn color="red" variant="tonal" class="px-3 pt-1 pb-6" prepend-icon="mdi-close"
-                                            @click="item.showDialog = false">Let me check again!
+                                            @click="item.showDialog = false">Not yet!
                                         </v-btn>
                                         <v-spacer></v-spacer>
                                         <v-btn color="green" variant="tonal" class="px-3 pt-1 pb-6" prepend-icon="mdi-check"
-                                            @click="changeStatus(item); item.showDialog = false">Yes
+                                            @click="changeStatus(item); item.showDialog = false">Yes, I am!
                                         </v-btn>
                                     </v-card-actions>
                                 </v-card>
@@ -295,14 +295,11 @@ export default {
 }
 
 .v-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: rgba(255, 247, 220, 0.842);
-    color: #6b391c;
+    background-color: rgb(255, 254, 250) !important;
 }
 
 .v-card.active-card {
-    background-color: rgba(255, 247, 220, 0.842) !important;
+    background-color: rgb(255, 254, 250) !important;
     transition: background-color 0.5s ease 3s;
 }
 
