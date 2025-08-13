@@ -14,15 +14,17 @@
           <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
           <span><strong>{{ authStore.shopName }}</strong></span>
           <v-spacer></v-spacer>
+
           <v-btn icon>
-            <v-badge v-if="stockNotificationQty >= 1" 
-              :content="stockNotificationQty" 
-              class="position-absolute" 
-              style="top: 2px; right: 9px;" 
-              color="error">
-            </v-badge>
-            <v-icon>mdi-bell-outline</v-icon>
+            <v-badge v-if="stockNotificationQty >= 1" :content="stockNotificationQty" class="position-absolute"
+              style="top: 2px; right: 9px;" color="error" />
+            <v-icon>mdi-dropbox</v-icon>
+            <v-tooltip v-if="stockNotificationQty >= 1" activator="parent" location="bottom">
+              <span class="text-white pa-3">{{ stockNotificationQty }} {{ stockNotificationQty === 1 ? 'stock' :
+                'stocks' }} has low quantity.</span>
+            </v-tooltip>
           </v-btn>
+
           <v-btn class="ms-0" icon>
             <v-icon @click="toSettings">mdi-account-circle-outline</v-icon>
           </v-btn>
@@ -43,6 +45,7 @@
         <router-view />
         <GlobalLoader />
       </v-layout>
+      <Alert ref="alertRef" />
     </v-main>
   </v-app>
 </template>
@@ -53,8 +56,10 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useLoadingStore } from '@/stores/loading';
 import { useStocksStore } from '@/stores/stocksStore';
-import GlobalLoader from '@/components/GlobalLoader.vue';
 import { useRoute } from 'vue-router';
+import GlobalLoader from '@/components/GlobalLoader.vue';
+import echo from '@/resources/js/echo';
+import Alert from '@/components/Alert.vue';
 
 export default {
   name: 'App',
@@ -65,9 +70,11 @@ export default {
   },
   components: {
     GlobalLoader,
+    Alert,
   },
   async mounted() {
     await this.fetchLowStocks();
+    this.lowStockAlert();
   },
   setup() {
     const authStore = useAuthStore();
@@ -160,22 +167,35 @@ export default {
     },
   },
   methods: {
+    // real-time
+    async lowStockAlert() {
+      echo.channel('lowStockLevelChannel')
+        .listen('LowStockLevel', (e) => {
+          this.showAlert(e.message);
+        });
+    },
+
     toSettings() {
       this.$router.push('/settings');
     },
+
     toKitchen() {
       this.$router.push('/kitchen');
     },
+
     async showLogout() {
       this.drawer = false;
       await this.authStore.logout();
     },
+
     toHelp() {
       this.$router.push('/help');
     },
+
     toAbout() {
       this.$router.push('/about');
     },
+
     async fetchLowStocks() {
       try {
         if (!this.authStore.branchId) {
