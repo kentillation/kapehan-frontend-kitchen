@@ -90,16 +90,19 @@ import { useBranchStore } from '@/stores/branchStore';
 import { useTransactStore } from '@/stores/transactionStore';
 import { useStocksStore } from '@/stores/stocksStore';
 import { useLoadingStore } from '@/stores/loading';
+import echo from '@/resources/js/echo';
 import Snackbar from '@/components/Snackbar.vue';
 import Alert from '@/components/Alert.vue';
 
 export default {
     // eslint-disable-next-line vue/multi-word-component-names
     name: 'Barista',
+
     components: {
         Snackbar,
         Alert,
     },
+
     data() {
         return {
             iconSize: "70px",
@@ -110,9 +113,15 @@ export default {
             changeStatusDialog: false,
         }
     },
+
     mounted() {
         this.fetchCurrentOrders();
     },
+
+    beforeUnmount() {
+        echo.leave('newOrderChannel');
+    },
+
     setup() {
         const authStore = useAuthStore();
         const branchStore = useBranchStore();
@@ -128,6 +137,7 @@ export default {
         };
         return { authStore, branchStore, transactStore, stocksStore, loadingStore, activeCards, handleCardClick };
     },
+
     computed: {
         ...mapState(useStocksStore, ['stockNotificationQty']),
         currentOrders() {
@@ -137,13 +147,26 @@ export default {
             }));
         },
     },
+
     methods: {
+
+        realTimeUpdates() {
+            setTimeout(() => {
+                echo.channel('newOrderChannel')
+                    .listen('NewOrderSubmitted', (e) => {
+                        this.showNewOrderAlert(e.message);
+                        console.log(e);
+                    });
+            }, 1000);
+        },
+
         async fetchCurrentOrders() {
             this.loadingStore.show("");
             this.loadingCurrentOrders = true;
             try {
-                this.fetchLowStocks();
+                // this.fetchLowStocks();
                 this.fetchStationStatus();
+                this.realTimeUpdates();
                 await this.transactStore.fetchAllCurrentOrdersStore();
                 const orders = [];
                 await Promise.all(this.transactStore.currentOrders.map(async (order) => {
@@ -238,7 +261,7 @@ export default {
                 const statusName = this.getStatusName(newStatus);
                 this.showSuccess(`${order.product_name}${order.temp_label}${order.size_label} is ${statusName}`);
                 order.station_status_id = newStatus;
-                this.fetchLowStocks();
+                // this.fetchLowStocks();
                 this.loadingStore.hide();
             } catch (error) {
                 console.error('Error updating status:', error);
@@ -248,16 +271,16 @@ export default {
             }
         },
 
-        async fetchLowStocks() {
-            try {
-                await this.stocksStore.fetchLowStocksStore(this.authStore.branchId);
-                if (this.stockNotificationQty > 0) {
-                    this.showAlert(`${this.stockNotificationQty} ${this.stockNotificationQty > 1 ? 'stocks' : 'stock'} has low quantity.`);
-                }
-            } catch (error) {
-                console.error('Error fetching stocks:', error);
-            }
-        },
+        // async fetchLowStocks() {
+        //     try {
+        //         await this.stocksStore.fetchLowStocksStore(this.authStore.branchId);
+        //         if (this.stockNotificationQty > 0) {
+        //             this.showAlert(`${this.stockNotificationQty} ${this.stockNotificationQty > 1 ? 'stocks' : 'stock'} has low quantity.`);
+        //         }
+        //     } catch (error) {
+        //         console.error('Error fetching stocks:', error);
+        //     }
+        // },
 
         showError(message) {
             this.$refs.snackbarRef.showSnackbar(message, "error");
@@ -265,6 +288,10 @@ export default {
 
         showAlert(message) {
             this.$refs.alertRef.showSnackbarAlert(message, "error");
+        },
+
+        showNewOrderAlert(message) {
+            this.$refs.alertRef.showSnackbarAlert(message, "success");
         },
 
         showSuccess(message) {
