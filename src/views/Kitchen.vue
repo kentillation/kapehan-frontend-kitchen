@@ -150,6 +150,7 @@ export default {
 
     methods: {
 
+        // real-time
         realTimeUpdates() {
             setTimeout(() => {
                 echo.channel('newOrderChannel')
