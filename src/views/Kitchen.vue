@@ -150,7 +150,6 @@ export default {
 
     methods: {
 
-        // real-time
         realTimeUpdates() {
             setTimeout(() => {
                 echo.channel('newOrderChannel')
@@ -167,22 +166,32 @@ export default {
             try {
                 // this.fetchLowStocks();
                 this.fetchStationStatus();
-                this.realTimeUpdates();
                 await this.transactStore.fetchAllCurrentOrdersStore();
                 const orders = [];
+                let hasNewKitchenOrders = false;
+
                 await Promise.all(this.transactStore.currentOrders.map(async (order) => {
                     try {
                         const response = await this.transactStore.fetchKitchenProductDetailsStore(order.transaction_id);
                         if (response?.data) {
+
+                            const orderItems = Object.values(response.data.all_orders || {}).map(item => ({
+                                ...item,
+                                station_status_id: Number(item.station_status_id),
+                                product_id: Number(item.product_id),
+                                station_id: Number(item.station_id),
+                                showDialog: false
+                            }));
+
+                            if (orderItems.some(item => Number(item.station_id) === 2)) {
+                                hasNewKitchenOrders = true;
+                            }
+
                             orders.push({
                                 transaction_id: response.data.transaction_id,
                                 table_number: response.data.table_number,
                                 reference_number: order.reference_number,
-                                order_items: Object.values(response.data.all_orders || {}).map(item => ({
-                                    ...item,
-                                    station_status_id: Number(item.station_status_id),
-                                    showDialog: false
-                                })),
+                                order_items: orderItems,
                                 customer_name: response.data.customer_name,
                                 total_amount: response.data.total_amount,
                                 order_status_id: response.data.order_status_id
@@ -199,7 +208,12 @@ export default {
                         });
                     }
                 }));
+
                 this.orders = orders;
+
+                if (hasNewKitchenOrders) {
+                    this.realTimeUpdates();
+                }
             } catch (error) {
                 console.error('Error fetching current orders:', error);
                 this.showError("Error fetching current orders!");
