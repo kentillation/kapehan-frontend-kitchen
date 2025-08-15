@@ -258,7 +258,7 @@ export default {
             const newStatus = this.station_statuses[nextStatusIndex].station_status_id;
             this.loadingStore.show("Updating status...");
             try {
-                await this.transactStore.updateKitchenProductStatusStore(order.product_id, order.transaction_id, newStatus);
+                await this.transactStore.updateKitchenProductStatusStore(order.product_id, Number(order.transaction_id), newStatus);
                 const statusName = this.getStatusName(newStatus);
                 this.showSuccess(`${order.product_name}${order.temp_label}${order.size_label} is ${statusName}`);
                 order.station_status_id = newStatus;
