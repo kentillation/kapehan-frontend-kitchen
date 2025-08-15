@@ -13,7 +13,6 @@ export const useAuthStore = defineStore('auth', () => {
     const branchName = ref(localStorage.getItem('branch_name') || null);
     const branchLocation = ref(localStorage.getItem('branch_location') || null);
     const branchContact = ref(localStorage.getItem('contact') || null);
-    // const stationId = ref(localStorage.getItem('station_id') || null);
     const token = ref(localStorage.getItem('auth_token') || null);
     const error = ref(null);
 
@@ -24,7 +23,6 @@ export const useAuthStore = defineStore('auth', () => {
     const getBranchName = computed(() => branchName.value);
     const getBranchLocation = computed(() => branchLocation.value);
     const getBranchContact = computed(() => branchContact.value);
-    // const getStationId = computed(() => stationId.value);
 
     // Actions
     const login = async (credentials) => {
@@ -40,7 +38,6 @@ export const useAuthStore = defineStore('auth', () => {
                 branchName.value = response.data.branch_name;
                 branchLocation.value = response.data.branch_location;
                 branchContact.value = response.data.contact;
-                // stationId.value = response.data.station_id;
 
                 localStorage.setItem('auth_token', token.value);
                 localStorage.setItem('shop_id', shopId.value);
@@ -49,7 +46,6 @@ export const useAuthStore = defineStore('auth', () => {
                 localStorage.setItem('branch_name', branchName.value);
                 localStorage.setItem('branch_location', branchLocation.value);
                 localStorage.setItem('contact', branchContact.value);
-                // localStorage.setItem('station_id', stationId.value);
 
                 return true;
             }
@@ -70,7 +66,6 @@ export const useAuthStore = defineStore('auth', () => {
         branchName.value = null;
         branchLocation.value = null;
         branchContact.value = null;
-        // stationId.value = null;
         error.value = null;
         localStorage.clear();
         try {
@@ -102,13 +97,11 @@ export const useAuthStore = defineStore('auth', () => {
         branchName,
         branchLocation,
         branchContact,
-        // stationId,
         getShopName,
         getBranchId,
         getBranchName,
         getBranchLocation,
         getBranchContact,
-        // getStationId,
         isAuthenticated,
         error,
         login,
