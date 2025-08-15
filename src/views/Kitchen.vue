@@ -155,7 +155,7 @@ export default {
                 echo.channel('station.2')
                     .listen('NewOrderSubmitted', (e) => {
                         console.log(e);
-                        if (e.stationId === 2) {
+                        if (e.stationId === "2") {
                             this.showNewOrderAlert(e.message);
                         }
                     });
